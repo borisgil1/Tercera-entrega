@@ -1,0 +1,92 @@
+[
+  {
+    "id": 1,
+    "title": "Play Station 1",
+    "description": "Consola de videojuegos",
+    "price": 1000,
+    "img": "Sin imagen",
+    "code": "abc123",
+    "stock": 3
+  },
+  {
+    "id": 2,
+    "title": "Play Station 2",
+    "description": "Consola de videojuegos",
+    "price": 1500,
+    "img": "Sin imagen",
+    "code": "abc124",
+    "stock": 15
+  },
+  {
+    "id": 3,
+    "title": "Play Station 3",
+    "description": "Consola de videojuegos",
+    "price": 2000,
+    "img": "Sin imagen",
+    "code": "abc125",
+    "stock": 19
+  },
+  {
+    "id": 4,
+    "title": "Play Station 4",
+    "description": "Consola de videojuegos",
+    "price": 2500,
+    "img": "Sin imagen",
+    "code": "abc126",
+    "stock": 43
+  },
+  {
+    "id": 5,
+    "title": "Play Station 5",
+    "description": "Consola de videojuegos",
+    "price": 3000,
+    "img": "Sin imagen",
+    "code": "abc127",
+    "stock": 190
+  },
+  {
+    "id": 6,
+    "title": "Xbox",
+    "description": "Consola de videojuegos",
+    "price": 900,
+    "img": "Sin imagen",
+    "code": "abc128",
+    "stock": 2
+  },
+  {
+    "id": 7,
+    "title": "Xbox 360",
+    "description": "Consola de videojuegos",
+    "price": 1400,
+    "img": "Sin imagen",
+    "code": "abc129",
+    "stock": 16
+  },
+  {
+    "id": 8,
+    "title": "Xbox One",
+    "description": "Consola de videojuegos",
+    "price": 1950,
+    "img": "Sin imagen",
+    "code": "abc130",
+    "stock": 21
+  },
+  {
+    "id": 9,
+    "title": "Nintengo Switch",
+    "description": "Consola de videojuegos",
+    "price": 2900,
+    "img": "Sin imagen",
+    "code": "abc131",
+    "stock": 245
+  },
+  {
+    "id": 10,
+    "title": "Play station Vita",
+    "description": "Consola de videojuegos",
+    "price": 2250,
+    "img": "Sin imagen",
+    "code": "abc132",
+    "stock": 9
+  }
+]
