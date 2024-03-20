@@ -1,25 +1,27 @@
 const fs = require("fs");
 
-
 class ProductManager {
     static lastId = 0;
     constructor() {
-        this.products = [];
         this.path = "./productManager.json";
+        this.loadProductsFromFile();
     }
 
     async loadProductsFromFile() {
         try {
             const data = await fs.promises.readFile(this.path, "utf-8");
             this.products = JSON.parse(data);
+            if (this.products.length > 0) {
+                ProductManager.lastId = Math.max(...this.products.map(product => product.id));
+            }
         } catch (error) {
             console.error("Error loading products from file:", error);
             this.products = [];
         }
     }
 
-    async addProduct(title, description, price, img, code, stock) {
-        if (!title || !description || !price || !img || !code || !stock) {
+    async addProduct(title, description, price, img, code, stock, category, status=true) {
+        if (!title || !description || !price || !img || !code || !stock || !category) {
             console.log("Favor llenar todos los campos");
             return;
         }
@@ -37,6 +39,8 @@ class ProductManager {
             img,
             code,
             stock,
+            category,
+            status,
         };
 
         this.products.push(newProduct);
@@ -74,7 +78,7 @@ class ProductManager {
 
     updateProduct = async (id, updatedFields) => {
         await this.loadProductsFromFile()
-        const index = this.products.findIndex(item => item.id === id);
+        const index = this.products.findIndex(item => item.id === parseInt(id));
         if (index === -1) {
             console.log("Producto no encontrado");
             return;
@@ -82,35 +86,37 @@ class ProductManager {
         this.products[index] = { ...this.products[index], ...updatedFields };
         await fs.promises.writeFile(this.path, JSON.stringify(this.products, null, 2));
         console.log("Producto actualizado correctamente");
+        return this.products[index];
     }
 
     deleteProduct = async (id) => {
+        id = parseInt(id);
         await this.loadProductsFromFile()
         const index = this.products.findIndex(item => item.id === id);
         if (index === -1) {
             console.log("Producto no encontrado");
-            return;
+            return null;
         }
         this.products.splice(index, 1);
         await fs.promises.writeFile(this.path, JSON.stringify(this.products, null, 2));
         console.log("Producto eliminado correctamente");
+        return this.deleteProduct;
     }
+
 }
 
 module.exports = ProductManager;
 //Testing
 
 //Instancia de la clase “ProductManager”
-//const testing = new ProductManager("./productManager.json");
+const testing = new ProductManager("./productManager.json");
 
 //getProducts - Devuelve arreglo vacío
 //testing.getProducts();
 
-//Iniciar
-//testing.init();
-
 //add product - Se agrega producto 
-// testing.addProduct("Play Station 1", "Consola de videojuegos", 1000, "Sin imagen", "abc123", 3);
+
+//testing.addProduct("Play Station 1", "Consola de videojuegos", 1000, "Sin imagen", "abc123", 3, "consola");
 // testing.addProduct("Play Station 2", "Consola de videojuegos", 1500, "Sin imagen", "abc124", 15);
 // testing.addProduct("Play Station 3", "Consola de videojuegos", 2000, "Sin imagen", "abc125", 19);
 // testing.addProduct("Play Station 4", "Consola de videojuegos", 2500, "Sin imagen", "abc126", 43);
