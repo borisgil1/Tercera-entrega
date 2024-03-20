@@ -21,8 +21,12 @@ class CartManager {
     }
 
     async addCart(newCart) {
-        this.carts.push(newCart);
-        await this.saveCartsToFile();
+        try {
+            this.carts.push(newCart);
+            await this.saveCartsToFile();
+        } catch (error) {
+            console.error("Error al crear nuevo carrito:", error);
+        }
     }
 
     async saveCartsToFile() {
@@ -33,10 +37,10 @@ class CartManager {
         }
     }
 
-    async getCarts(){
+    async getCarts() {
         await this.loadCartsFromFile()
-        console.log(this.carts); 
-        return this.carts; 
+        console.log(this.carts);
+        return this.carts;
     }
 
     async getCartsById(id) {
