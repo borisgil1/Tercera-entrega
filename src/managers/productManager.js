@@ -102,7 +102,6 @@ class ProductManager {
         console.log("Producto eliminado correctamente");
         return this.deleteProduct;
     }
-
 }
 
 module.exports = ProductManager;
