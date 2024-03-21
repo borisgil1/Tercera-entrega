@@ -24,8 +24,8 @@ router.post("/", async (req, res) => {
 
 //Mostrar carrito por ID
 router.get("/:cid", async (req, res) => {
+    let cid = parseInt(req.params.cid);
     try {
-        let cid = parseInt(req.params.cid);
         const cart = await cartManager.getCartsById(cid);
         if (cart) {
             return res.send(cart);
@@ -49,11 +49,11 @@ router.get("/", async (req, res) => {
     }
 });
 
-//Agregar producto a carrito
+//Agregar productos a carritos
 router.post("/:cid/products/:pid", async (req, res) => {
-    try {
         const { cid, pid } = req.params;
         const { quantity } = req.body;
+        try {
         const cartId = parseInt(cid);
         const productId = parseInt(pid);
         const foundProduct = await productManager.getProductById(productId);

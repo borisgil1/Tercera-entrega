@@ -3,7 +3,7 @@ const fs = require("fs");
 class ProductManager {
     static lastId = 0;
     constructor() {
-        this.path = "./productManager.json";
+        this.path = "./src/models/productManager.json";
         this.loadProductsFromFile();
     }
 
@@ -21,16 +21,15 @@ class ProductManager {
     }
 
     async addProduct(title, description, price, img, code, stock, category, status=true) {
+        try {
         if (!title || !description || !price || !img || !code || !stock || !category) {
             console.log("Favor llenar todos los campos");
             return;
         }
-
         if (this.products.some(item => item.code === code)) {
             console.log("El código debe ser único");
             return;
         }
-
         const newProduct = {
             id: ++ProductManager.lastId,
             title,
@@ -42,12 +41,13 @@ class ProductManager {
             category,
             status,
         };
-
         this.products.push(newProduct);
-
         await this.saveProductsToFile();
         console.log("Producto agregado exitosamente");
-        return newProduct;    
+        return newProduct;          
+        } catch (error) {
+            console.error("Error al agrergar un nuevo producto", error);
+        }
     }
 
     async saveProductsToFile() {

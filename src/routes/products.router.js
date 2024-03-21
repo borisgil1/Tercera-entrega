@@ -56,9 +56,9 @@ router.post("/", async (req, res) => {
 
 //Actualizar productos
 router.put("/:id", async (req, res) => {
+    const { id } = req.params;
+    const { title, description, price, img, code, stock, category } = req.body;
     try {
-        const { id } = req.params;
-        const { title, description, price, img, code, stock, category } = req.body;
         const productUpdated = await productManager.updateProduct(id, { title, description, price, img, code, stock, category });
         if (!productUpdated) {
             return res.status(500).send({ message: "Error al modificar producto" });
@@ -73,8 +73,8 @@ router.put("/:id", async (req, res) => {
 
 //Eliminar productos
 router.delete("/:id", async (req, res) => {
+    const { id } = req.params;
     try {
-        const { id } = req.params;
         const productToDelete = await productManager.deleteProduct(id);
         if (!productToDelete) {
             return res.status(404).send({ message: "Producto no encontrado" });
