@@ -1,33 +1,25 @@
 const express = require("express");
 const router = express.Router();
+const fs = require("fs");
+const ProductManager = require("../controllers/productManager")
+const productManager = new ProductManager("src/models/productManager.json")
 
-const arrayProductos = [
-    { nombre: "Camisa", descripcion: "Hecha de algodón suave y transpirable.", precio: 25.99 },
-    { nombre: "Zapatos", descripcion: "Zapatos deportivos ligeros.", precio: 49.99 },
-    { nombre: "Teléfono", descripcion: "Teléfono inteligente.", precio: 699.99 },
-    { nombre: "Auriculares", descripcion: "Con cancelación de ruido y batería de larga duración.", precio: 129.99 }
-];
-
-router.get("/", (req, res) => {
-    const usuario = {
-        nombre: "Ivan",
-        apellido: "Gil",
-        mayorEdad: false
+router.get("/", async (req, res) => {
+    try {
+        const productos = await productManager.getProducts();
+        res.render("home", { productos, titulo: "Plantilla" });
+    } catch (error) {
+res.status(500).json({error: "Error interno del servidor"})
     }
-    res.render("index", { usuario, arrayProductos, titulo:"Plantilla" });
 });
 
-router.get("/productos", (req, res) => {
-    res.render("productos");
-})
 
-router.get("/carrito", (req, res) => {
-    res.render("carrito");
+router.get("/realtimeproducts", (req, res) => {
+    res.render("realTimeProducts");
 })
 
 router.get("/contacto", (req, res) => {
     res.render("contacto");
 })
-
 
 module.exports = router;

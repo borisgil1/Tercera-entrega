@@ -1,8 +1,12 @@
-{{#each arrayProductos}}
-<div>
-    <h2>Titulo: {{this.nombre}}</h2>
-    <p>Descripción: {{this.descripcion}}</p>
-    <p>Precio: {{this.precio}}</p>
-    <button>Comprar</button>
+<div class="mx-auto container-fluid row mt-4">
+    {{#each productos}}
+    <div class="col-xl-4 col-md-4 col-sm-4 mb-4">
+        <div class="card text-center card-height">
+            <h2 class="mb-2" >{{this.title}}</h2>
+            <p>{{this.description}}</p>
+            <p>Precio: {{this.price}}</p>
+            <button>Comprar</button>
+        </div>
+    </div>
+    {{/each}}
 </div>
-{{/each}}

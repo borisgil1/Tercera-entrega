@@ -1,8 +1,14 @@
 h1 {
     color: red;
     text-align: center;
+    font-size: 40px;
 }
 
 h2 {
     color: green;
+    font-size: 25px;
+}
+
+.card-height {
+    height: 200px;
 }

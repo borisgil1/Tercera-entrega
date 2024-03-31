@@ -45,6 +45,7 @@ io.on("connection", (socket) => {
 
     socket.emit("saludo", "Hola cliente, que tal?");
 
+    //Enviar mensaje para mostrar productos
     fs.readFile("src/models/productManager.json", "utf8", (err, data) => {
         if (err) {
             console.error("Error al leer el archivo productos.json:", err);

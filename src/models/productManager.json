@@ -2,7 +2,7 @@
   {
     "id": 1,
     "title": "Nintendo Switch",
-    "description": "Consola de videojuegos híbrida",
+    "description": "Consola híbrida",
     "price": 299,
     "img": "https://ejemplo.com/imagen/nintendo_switch.jpg",
     "code": "SWITCH001",
@@ -13,7 +13,7 @@
   {
     "id": 2,
     "title": "PlayStation 5",
-    "description": "Consola de videojuegos de próxima generación",
+    "description": "Consola de última generación",
     "price": 499,
     "img": "https://ejemplo.com/imagen/ps5.jpg",
     "code": "PS5001",
@@ -24,7 +24,7 @@
   {
     "id": 3,
     "title": "Xbox Series X",
-    "description": "Consola de videojuegos de alta potencia",
+    "description": "Consola de alta potencia",
     "price": 499,
     "img": "https://ejemplo.com/imagen/xbox_series_x.jpg",
     "code": "XBOX001",
@@ -35,7 +35,7 @@
   {
     "id": 4,
     "title": "Nintendo Switch Lite",
-    "description": "Consola de videojuegos portátil",
+    "description": "Consola portátil",
     "price": 199,
     "img": "https://ejemplo.com/imagen/nintendo_switch_lite.jpg",
     "code": "SWITCHLITE001",
@@ -46,7 +46,7 @@
   {
     "id": 5,
     "title": "PlayStation 4 Pro",
-    "description": "Consola de videojuegos con capacidad para juegos en 4K",
+    "description": "Consola en 4K",
     "price": 399,
     "img": "https://ejemplo.com/imagen/ps4_pro.jpg",
     "code": "PS4PRO001",
@@ -57,7 +57,7 @@
   {
     "id": 6,
     "title": "Xbox One X",
-    "description": "Consola de videojuegos con soporte para resolución 4K y HDR",
+    "description": "Consola con soporte para resolución 4K y HDR",
     "price": 499,
     "img": "https://ejemplo.com/imagen/xbox_one_x.jpg",
     "code": "XBOXONEX001",
@@ -68,7 +68,7 @@
   {
     "id": 7,
     "title": "Nintendo 3DS",
-    "description": "Consola de videojuegos portátil con pantalla 3D",
+    "description": "Consola portátil con pantalla 3D",
     "price": 149,
     "img": "https://ejemplo.com/imagen/nintendo_3ds.jpg",
     "code": "N3DS001",
@@ -79,7 +79,7 @@
   {
     "id": 8,
     "title": "Sega Genesis Mini",
-    "description": "Consola de videojuegos retro con juegos preinstalados",
+    "description": "Consola retro",
     "price": 79,
     "img": "https://ejemplo.com/imagen/sega_genesis_mini.jpg",
     "code": "GENESISMINI001",
@@ -90,7 +90,7 @@
   {
     "id": 9,
     "title": "PlayStation Vita",
-    "description": "Consola de videojuegos portátil con pantalla táctil",
+    "description": "Consola con pantalla táctil",
     "price": 199,
     "img": "https://ejemplo.com/imagen/ps_vita.jpg",
     "code": "PSVITA001",
@@ -100,11 +100,11 @@
   },
   {
     "id": 10,
-    "title": "Atari Flashback",
-    "description": "Consola de videojuegos retro con juegos clásicos de Atari",
+    "title": "Atari Flashback71",
+    "description": "Consola con juegos clásicos de Atari",
     "price": 59,
     "img": "https://ejemplo.com/imagen/atari_flashback.jpg",
-    "code": "ATARI001",
+    "code": "ATAR55I001",
     "stock": 20,
     "category": "Consolas",
     "status": true
