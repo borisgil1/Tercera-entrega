@@ -6,11 +6,10 @@ const productsRouter = require("./routes/products.router.js");
 const cartsRouter = require("./routes/carts.router.js");
 const viewsRouter = require("./routes/views.router.js");
 const exphbs = require("express-handlebars");
-const { Server } = require("socket.io");
+const socket = require("socket.io");
 const fs = require("fs");
-
-//const ProductManager = require("./controllers/productManager.js");
-//const CartManager = require("./controllers/cartManager.js");
+const ProductManager = require("./controllers/productManager.js");
+const productManager = new ProductManager();
 
 //Handlebar
 app.engine("handlebars", exphbs.engine());
@@ -21,7 +20,6 @@ app.set("views", "./src/views");
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("./src/public"));
-//const productManager = new ProductManager();
 
 //Rutas
 app.use("/api/products", productsRouter);
@@ -34,30 +32,25 @@ const httpServer = app.listen(PUERTO, () => {
 })
 
 //instancia Socket del servidor
-const io = new Server(httpServer);
+const io = socket(httpServer);
+
 
 //Conección cliente
-io.on("connection", (socket) => {
+io.on("connection", async (socket) => {
     console.log("Un cliente se conectó");
     socket.on("mensaje", (data) => {
-        console.log(data);
     })
 
-    socket.emit("saludo", "Hola cliente, que tal?");
+//Enviar mensaje para renderizar productos
+    socket.emit("products", await productManager.getProducts());
 
-    //Enviar mensaje para mostrar productos
-    fs.readFile("src/models/productManager.json", "utf8", (err, data) => {
-        if (err) {
-            console.error("Error al leer el archivo productos.json:", err);
-            return;
-        }
-        socket.emit("products", JSON.parse(data));
-    });
-})
+//Recibir evento eliminar producto
+socket.on("deleteProduct", async (id) => {
+    await productManager.deleteProduct(id);
+    //Actualizamos array
+    socket.emit("products", await productManager.getProducts());
+})    
 
-
-
-
-
+});
 
 
