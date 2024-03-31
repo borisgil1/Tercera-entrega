@@ -1,5 +1,16 @@
 [
   {
+    "id": 1,
+    "title": "Nintendo Switch",
+    "description": "Consola híbrida",
+    "price": 299,
+    "img": "https://ejemplo.com/imagen/nintendo_switch.jpg",
+    "code": "SWITCH001",
+    "stock": 20,
+    "category": "Consolas",
+    "status": true
+  },
+  {
     "id": 2,
     "title": "PlayStation 5",
     "description": "Consola de última generación",
@@ -7,6 +18,17 @@
     "img": "https://ejemplo.com/imagen/ps5.jpg",
     "code": "PS5001",
     "stock": 15,
+    "category": "Consolas",
+    "status": true
+  },
+  {
+    "id": 3,
+    "title": "Xbox Series X",
+    "description": "Consola de alta potencia",
+    "price": 499,
+    "img": "https://ejemplo.com/imagen/xbox_series_x.jpg",
+    "code": "XBOX001",
+    "stock": 10,
     "category": "Consolas",
     "status": true
   },

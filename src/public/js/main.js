@@ -1,3 +1,5 @@
+//Cliente
+
 const socket = io();
 
 //Escuchamos el evento para renderizar los productos
@@ -18,12 +20,12 @@ socket.on("products", (data) => {
     `;
         listaProducto.innerHTML += card;
 
-       // Agrear evento al boton 
-       const buttons = document.querySelectorAll("#lista-productos button");
+        // Agrear evento al boton 
+        const buttons = document.querySelectorAll("#lista-productos button");
         buttons.forEach(button => {
             button.addEventListener("click", () => {
                 const productId = button.getAttribute("data-id");
-                eliminarProducto(productId );
+                eliminarProducto(productId);
             });
         });
     });
@@ -35,13 +37,13 @@ eliminarProducto = (id) => {
 }
 
 //Agregar producto
-document.getElementById("btnEnviar").addEventlistener("click", () => {
-    agregarProducto();
+document.getElementById("btnEnviar").addEventListener("click", () => {
+    addProduct();
 })
 
 //Agg producto
-agregarProducto = () => {
-    const producto = {
+addProduct = () => {
+    const product = {
         title: document.getElementById("title").value,
         description: document.getElementById("description").value,
         price: document.getElementById("price").value,
@@ -50,7 +52,6 @@ agregarProducto = () => {
         stock: document.getElementById("stock").value,
         category: document.getElementById("category").value,
         status: document.getElementById("status").value === "true"
-
-    }
-    socket.emit("agregarProdcuto", producto)
-}
+    };
+    socket.emit("addProduct", product);
+};

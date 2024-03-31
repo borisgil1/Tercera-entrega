@@ -34,23 +34,26 @@ const httpServer = app.listen(PUERTO, () => {
 //instancia Socket del servidor
 const io = socket(httpServer);
 
-
 //Conección cliente
 io.on("connection", async (socket) => {
     console.log("Un cliente se conectó");
-    socket.on("mensaje", (data) => {
+
+    //Enviar mensaje para renderizar productos
+    socket.emit("products", await productManager.getProducts());
+
+    //Recibir evento eliminar producto
+    socket.on("deleteProduct", async (id) => {
+        await productManager.deleteProduct(id);
+        //Evniamos array actualizado
+        socket.emit("products", await productManager.getProducts());
     })
 
-//Enviar mensaje para renderizar productos
-    socket.emit("products", await productManager.getProducts());
-
-//Recibir evento eliminar producto
-socket.on("deleteProduct", async (id) => {
-    await productManager.deleteProduct(id);
-    //Actualizamos array
-    socket.emit("products", await productManager.getProducts());
-})    
-
+    //Recibir evento agg producto desde cliente
+    socket.on("addProduct", async (product) => {
+        await productManager.addProduct(product.title, product.description, product.price, product.img, product.code, product.stock, product.category, product.status);
+        socket.emit("products", await productManager.getProducts());
+        //io.emit("products", await productManager.getProducts());
+    })
 });
 
 
