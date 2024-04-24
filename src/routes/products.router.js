@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const ProductManager = require("../controllers/productManager.js");
+const ProductsModel = require("../models/products.model.js");
 const productManager = new ProductManager();
 
 //Mostar productos - limite
@@ -22,8 +23,9 @@ router.get("/", async (req, res) => {
 
 //Mostrar productos por ID
 router.get("/:id", async (req, res) => {
+    let id = req.params.id;
+    console.log(id)
     try {
-        let id = parseInt(req.params.id);
         const product = await productManager.getProductById(id);
         if (product) {
             return res.send(product);
@@ -37,20 +39,20 @@ router.get("/:id", async (req, res) => {
 
 //Agregar productos
 router.post("/", async (req, res) => {
+    const newProduct = req.body;
     try {
-        const { title, description, price, img, code, stock, category } = req.body;
-        if (!title || !description || !price || !img || !code || !stock || !category) {
-            return res.status(400).send({ message: "Favor llenar todos los campos" });
+        const existingProduct = await ProductsModel.findOne({ code: newProduct.code });
+        if (existingProduct) {
+            // Si existe un producto con el mismo código, devuelve un mensaje de error
+            return res.status(400).json({ message: "El código debe ser único" });
         }
-        const newProduct = await productManager.addProduct(title, description, price, img, code, stock, category);
-        if (!newProduct) {
-            console.log(newProduct)
-            return res.status(500).send({ message: "Error al agregar el producto" });
-        }
-        console.log("Producto agregado:", newProduct);
-        res.status(201).send({ message: "Producto nuevo agregado", product: newProduct });
+        await productManager.addProduct(newProduct);
+        res.status(201).send({ message: "Producto agregado exitosamente", newProduct});
     } catch (error) {
-        return res.status(500).send("Error al agregar el producto");
+        console.error("Error al agregar producto", error);
+        res.status(500).json({
+            error: "Error interno del servidor"
+        });
     }
 });
 
@@ -72,8 +74,9 @@ router.put("/:id", async (req, res) => {
 })
 
 //Eliminar productos
-router.delete("/:id", async (req, res) => {
-    const { id } = req.params;
+router.delete("/:pid", async (req, res) => {
+    const id = req.params.pid;
+    console.log(id)
     try {
         const productToDelete = await productManager.deleteProduct(id);
         if (!productToDelete) {

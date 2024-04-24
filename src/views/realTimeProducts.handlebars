@@ -1,8 +1,7 @@
 <h1>Productos</h1>
 
 <h2>Lista de productos</h2>
-<ul id="lista-productos"></ul>
-{{>card}}
+<div class="row" id="lista-productos"></div>
 
 <div id="contenedorProductos"></div>
 
@@ -20,6 +19,7 @@
         <option value="true"> Activo </option>
         <option value="false"> Inactivo </option>
     </select>
+        <input type="text" id="thumbnails" placeholder="thumbnails (separa por comas)">
     <button type="button" id="btnEnviar"> Enviar </button>
 </form>
 

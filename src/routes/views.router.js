@@ -21,4 +21,8 @@ router.get("/contacto", (req, res) => {
     res.render("contacto");
 })
 
+router.get("/chat", (req, res) => {
+    res.render("chat");
+})
+
 module.exports = router;

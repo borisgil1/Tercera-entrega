@@ -7,9 +7,12 @@ const cartsRouter = require("./routes/carts.router.js");
 const viewsRouter = require("./routes/views.router.js");
 const exphbs = require("express-handlebars");
 const socket = require("socket.io");
-const fs = require("fs");
+//const fs = require("fs");
 const ProductManager = require("./controllers/productManager.js");
 const productManager = new ProductManager();
+require("./database.js");
+const MessagesModel = require("./models/messages.model.js")
+
 
 //Handlebar
 app.engine("handlebars", exphbs.engine());
@@ -39,7 +42,9 @@ io.on("connection", async (socket) => {
     console.log("Un cliente se conectó");
 
     //Enviar mensaje para renderizar productos
-    socket.emit("products", await productManager.getProducts());
+    const products = await productManager.getProducts();
+    socket.emit("products", products);
+    //console.log(products)
 
     //Recibir evento eliminar producto
     socket.on("deleteProduct", async (id) => {
@@ -57,3 +62,17 @@ io.on("connection", async (socket) => {
 });
 
 
+//const io = new socket.Server(httpServer)
+//chat
+io.on("connection", (socket) => {
+    console.log("Nuevo usuario conectado");
+
+    socket.on("message", async data => {
+       await MessagesModel.create(data);
+
+        //obtengo mensajes de mongo
+        const messages = await MessagesModel.find();
+        console.log(messages)
+        io.emit("messagesLogs", messages);
+    })
+})

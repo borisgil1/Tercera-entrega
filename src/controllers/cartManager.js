@@ -1,94 +1,68 @@
-const fs = require("fs");
+const CartsModel = require("../models/carts.model");
 
 class CartManager {
-    static lastId = 0;
-    constructor() {
-        this.path = "./src/models/cartManager.json";
-        this.loadCartsFromFile();
-    }
-
-    async loadCartsFromFile() {
+ 
+    async addCart(newCartData) {
         try {
-            const data = await fs.promises.readFile(this.path, "utf-8");
-            this.carts = JSON.parse(data);
-            if (this.carts.length > 0) {
-                CartManager.lastId = Math.max(...this.carts.map(cart => cart.id));
-            }
-        } catch (error) {
-            console.error("Error loading products from file:", error);
-            //probar//
-            await this.saveCartsToFile();
-            this.carts = [];
-        }
-    }
-
-    async addCart(newCart) {
-        try {
-            this.carts.push(newCart);
-            await this.saveCartsToFile();
+            const newCart = await CartsModel.create(newCartData);
+            console.log("Carrito creado exitosamente");
+            return newCart;
         } catch (error) {
             console.error("Error al crear nuevo carrito:", error);
         }
     }
 
-    async saveCartsToFile() {
-        try {
-            await fs.promises.writeFile(this.path, JSON.stringify(this.carts, null, 2));
-        } catch (error) {
-            console.error("Error guardando productos al archivo", error);
-        }
-    }
-
     async getCarts() {
         try {
-            await this.loadCartsFromFile()
-            console.log(this.carts);
-            return this.carts;
+            const carts = await CartsModel.find();
+            console.log("Carritos encontrados:", carts);
+            return carts;
         } catch (error) {
-            console.error("Error cargando los carritos del archivo", error);
+            console.error("Error al obtener los carritos:", error);
         }
     }
 
-    async getCartsById(id) {
+    async getCartById(id) {
         try {
-            await this.loadCartsFromFile();
-            const cart = this.carts.find(item => item.id === id);
+            const cart = await CartsModel.findById(id);
             if (!cart) {
                 console.log(`Carrito con ID "${id}" no encontrado`);
                 return null;
             } else {
-                console.log("Carrito encontrado", cart);
+                console.log("Carrito encontrado:", cart);
                 return cart;
             }
         } catch (error) {
-            console.log("Error al encontrar carrito", error);
+            console.error("Error al encontrar carrito por ID:", error);
         }
     }
 
-    updateCart = async (id, updatedFields) => {
-        await this.loadCartsFromFile()
-        const index = this.carts.findIndex(item => item.id === parseInt(id));
-        if (index === -1) {
-            console.log("Carrito no encontrado");
-            return;
+    async updateCart(id, updatedFields) {
+        try {
+            const updatedCart = await CartsModel.findByIdAndUpdate(id, updatedFields, { new: true });
+            if (!updatedCart) {
+                console.log("Carrito no encontrado");
+                return null;
+            }
+            console.log("Carrito actualizado correctamente:", updatedCart);
+            return updatedCart;
+        } catch (error) {
+            console.error("Error al actualizar carrito:", error);
         }
-        this.carts[index] = { ...this.carts[index], ...updatedFields };
-        await fs.promises.writeFile(this.path, JSON.stringify(this.carts, null, 2));
-        console.log("Vsrito actualizado correctamente");
-        return this.procartsducts[index];
     }
 
-    deleteCart = async (id) => {
-        id = parseInt(id);
-        await this.loadCartsFromFile()
-        const index = this.carts.findIndex(item => item.id === id);
-        if (index === -1) {
-            console.log("Carrito no encontrado");
-            return;
+    async deleteCart(id) {
+        try {
+            const deletedCart = await CartsModel.findByIdAndDelete(id);
+            if (!deletedCart) {
+                console.log("Carrito no encontrado");
+                return null;
+            }
+            console.log("Carrito eliminado correctamente:", deletedCart);
+            return deletedCart;
+        } catch (error) {
+            console.error("Error al eliminar carrito:", error);
         }
-        this.products.splice(index, 1);
-        await fs.promises.writeFile(this.path, JSON.stringify(this.carts, null, 2));
-        console.log("Carrito eliminado correctamente");
     }
 }
 
