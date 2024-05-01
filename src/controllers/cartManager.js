@@ -48,6 +48,7 @@ class CartManager {
             return updatedCart;
         } catch (error) {
             console.error("Error al actualizar carrito:", error);
+            throw error; 
         }
     }
 
@@ -64,6 +65,22 @@ class CartManager {
             console.error("Error al eliminar carrito:", error);
         }
     }
+
+    async clearCart(id) {
+        try {
+            const updatedCart = await CartsModel.findByIdAndUpdate(id, { $set: { products: [] } }, { new: true });
+            if (!updatedCart) {
+                console.log("Carrito no encontrado");
+                return null;
+            }
+            console.log("Carrito vaciado correctamente");
+            return updatedCart;
+        } catch (error) {
+            console.error("Error al vaciar el carrito:", error);
+            throw error; 
+        }
+    }
 }
+
 
 module.exports = CartManager;

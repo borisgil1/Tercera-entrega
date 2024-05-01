@@ -1,20 +1,18 @@
 {{#each productos}}
-<div>
-    <h2>Titulo: {{this.nombre}}</h2>
-    <p>Descripción: {{this.descripcion}}</p>
-    <p>Precio: {{this.precio}}</p>
-    <button>Comprar</button>
-</div>
-{{/each}}
 <div class="mx-auto container-fluid row mt-4">
     {{#each productos}}
-    <div class="col-xl-4 col-md-4 col-sm-4 mb-4">
-        <div class="card text-center card-height">
-            <h2 class="mb-2" >{{this.title}}</h2>
-            <p>{{this.description}}</p>
-            <p>Precio: {{this.price}}</p>
-            <button>Comprar</button>
-        </div>
-    </div>
-    {{/each}}
-</div>
+     <div id="lista-productos">
+                  <div class="card-header bg-primary text-white">
+                      <h5 class="card-title">:({{product.title}}</h5>
+                  </div>
+                  <div class="card-body">
+                      <img src="${product.img}" class="card-img-top" alt="${product.title}">
+                      <p class="card-text">${product.description}</p>
+                      <p class="card-text">Precio: $${product.price.toFixed(2)}</p>
+                  </div>
+                  <div class="card-footer">
+                      <button class="btn btn-danger btn-delete" data-id="${product._id}">Eliminar</button>
+                  </div>
+              </div>
+</div> 
+ {{/each}}

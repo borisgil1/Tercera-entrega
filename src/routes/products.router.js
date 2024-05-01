@@ -6,25 +6,20 @@ const productManager = new ProductManager();
 
 //Mostar productos - limite
 router.get("/", async (req, res) => {
+    // const page = req.query.page || 1;
+    // const limit = req.query.limit || 20; // Límite de productos por página
     try {
-        const products = await productManager.getProducts();
-        let limit = parseInt(req.query.limit);
-        if (limit) {
-            let limitedProducts = products.slice(0, limit);
-            return res.send(limitedProducts);
-        } else {
-            return res.send(products);
-        }
-    }
-    catch (error) {
-        return res.status(500).send("Error al obtener los productos");
+        const products = await ProductsModel.paginate();
+       // console.log(products)
+        res.send(products);
+    } catch (error) {
+        res.status(500).send("Error al obtener los productos");
     }
 });
 
 //Mostrar productos por ID
 router.get("/:id", async (req, res) => {
     let id = req.params.id;
-    console.log(id)
     try {
         const product = await productManager.getProductById(id);
         if (product) {
@@ -47,7 +42,7 @@ router.post("/", async (req, res) => {
             return res.status(400).json({ message: "El código debe ser único" });
         }
         await productManager.addProduct(newProduct);
-        res.status(201).send({ message: "Producto agregado exitosamente", newProduct});
+        res.status(201).send({ message: "Producto agregado exitosamente", newProduct });
     } catch (error) {
         console.error("Error al agregar producto", error);
         res.status(500).json({
