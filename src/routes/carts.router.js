@@ -49,41 +49,20 @@ router.get("/", async (req, res) => {
 
 //Agregar productos a carritos
 router.post("/:cid/products/:pid", async (req, res) => {
-    let cid = req.params.cid;
-    let pid = req.params.pid;
-    let { quantity } = req.body;
+    const cid = req.params.cid;
+    const pid = req.params.pid;
+    const quantity = req.body.quantity;
 
     try {
-        const foundProduct = await productManager.getProductById(pid);
-        console.log(foundProduct);
-        const foundCart = await cartManager.getCartById(cid);
-        console.log(foundCart);
-
-        if (!foundProduct || !foundCart) {
-            return res.status(404).send({ message: "Producto o carrito no encontrado" });
-        }
-
-        const existingProductIndex = foundCart.products.findIndex(product => product.product.equals(product));
-
-        if (existingProductIndex !== -1) {
-            foundCart.products[existingProductIndex].quantity += parseInt(quantity);
-        } else {
-            foundCart.products.push({
-                product: foundProduct,
-                quantity: parseInt(quantity),
-            });
-        }
-
-        await foundCart.save();
-        console.log(foundCart)
-
-        return res.status(200).send({ message: "Producto agregado al carrito con éxito", cart: foundCart });
+        const cartUpdated = await cartManager.addProductToCart(cid, pid, quantity)
+        return res.status(200).send({ message: "Producto agregado al carrito con éxito", cart: cartUpdated });
     } catch (error) {
         console.error("Error al agregar producto al carrito:", error);
         return res.status(500).send("Error al agregar producto al carrito:");
     }
 });
-module.exports = router;
+
+
 
 //Eliminar producto de carrito
 router.delete("/:cid/products/:pid", async (req, res) => {
@@ -141,10 +120,9 @@ router.put("/:cid/products/:pid", async (req, res) => {
 
 //Vaciar carrito
 router.delete("/:cid", async (req, res) => {
-    let id = req.params.cid;
-    console.log(id)
+    const id = req.params.cid;
     try {
-        const updatedCart = await cartManager.clearCart(id);
+        const updatedCart = await cartManager.emptyCart(id);
         if (!updatedCart) {
             return res.status(404).send({ message: "Carrito no encontrado" });
         }
@@ -153,3 +131,5 @@ router.delete("/:cid", async (req, res) => {
         return res.status(500).send("Error al vaciar el carrito");
     }
 });
+
+module.exports = router;

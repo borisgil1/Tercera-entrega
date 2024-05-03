@@ -9,12 +9,7 @@ router.get("/", async (req, res) => {
      const page = req.query.page || 1;
     const limit = req.query.limit || 20; 
     try {
-        const products = await productManager.getProducts({
-            limit: parseInt(limit),
-            page: parseInt(page),
-            sort,
-            query,
-        });
+        const products = await ProductsModel.paginate();
       
         res.json({
             status: 'success',

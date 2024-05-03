@@ -12,6 +12,9 @@ const ProductManager = require("./controllers/productManager.js");
 const productManager = new ProductManager();
 require("./database.js");
 const MessagesModel = require("./models/messages.model.js")
+//verificar
+const CartManager = require("./controllers/cartManager.js");
+const cartManager = new CartManager();
 
 
 //Handlebar
@@ -46,14 +49,14 @@ io.on("connection", async (socket) => {
     socket.emit("products", products);
     //console.log(products)
 
-    //Recibir evento eliminar producto
-    socket.on("deleteProduct", async (id) => {
-        await productManager.deleteProduct(id);
+    //Recibir evento agg producto al carrito
+    socket.on("addProductToCart", async (cid, pid, quantity) => {
+        await cartManager.addProductToCart(cid, pid, quantity);
         //Evniamos array actualizado
-        socket.emit("products", await productManager.getProducts());
+        socket.emit("addProductToCart", await cartManager.addProductToCart(cid, pid, quantity));
     })
 
-    //Recibir evento agg producto desde cliente
+    //Recibir evento agg producto desde cliente con formulario
     socket.on("addProduct", async (product) => {
         await productManager.addProduct(product.title, product.description, product.price, product.img, product.code, product.stock, product.category, product.status);
         socket.emit("products", await productManager.getProducts());

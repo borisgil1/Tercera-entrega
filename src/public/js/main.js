@@ -23,7 +23,7 @@ socket.on("products", (products) => {
                       <p class="card-text">Precio: $${product.price.toFixed(2)}</p>
                   </div>
                   <div class="card-footer">
-                      <button class="btn btn-danger btn-delete" data-id="${product._id}">Eliminar</button>
+                      <button class="btn btn-danger btn-delete" data-id="${product._id}">Agregar al carrito</button>
                   </div>
               </div>
           `;
@@ -34,39 +34,41 @@ socket.on("products", (products) => {
         // Agrear evento al boton 
         const buttons = document.querySelectorAll("#lista-productos button");
         buttons.forEach(button => {
-            button.addEventListener("click", () => {
-                const productId = button.getAttribute("data-id");
-                eliminarProducto(productId);
+            button.addEventListener("click", async () => {
+                const cid = "66300b9804b8fabc11cf2904";
+                const pid = button.getAttribute("data-id");
+                const quantity = +1
+                await addProductToCart(cid, pid, quantity) ;
             });
         });
     });
 });
 
-//Eliminar producto
-eliminarProducto = (id) => {
-    socket.emit("deleteProduct", id);
+//Agregar producto al carrito
+addProductToCart = (cid, pid, quantity) => {
+    socket.emit("addProductToCart", cid, pid, quantity);
 }
 
-//Agregar producto
-document.getElementById("btnEnviar").addEventListener("click", () => {
-    addProduct();
-})
+// //Agregar producto
+// document.getElementById("btnEnviar").addEventListener("click", () => {
+//     addProduct();
+// })
 
 //Agg producto
-addProduct = () => {
-    const product = {
-        title: document.getElementById("title").value,
-        description: document.getElementById("description").value,
-        price: document.getElementById("price").value,
-        img: document.getElementById("img").value,
-        code: document.getElementById("code").value,
-        stock: document.getElementById("stock").value,
-        category: document.getElementById("category").value,
-        status: document.getElementById("status").value === "true",
-        thumbnails: document.getElementById("thumbnails").value.split(",").map(item => item.trim())
-    };
-    socket.emit("addProduct", product);
-};
+// addProduct = () => {
+//     const product = {
+//         title: document.getElementById("title").value,
+//         description: document.getElementById("description").value,
+//         price: document.getElementById("price").value,
+//         img: document.getElementById("img").value,
+//         code: document.getElementById("code").value,
+//         stock: document.getElementById("stock").value,
+//         category: document.getElementById("category").value,
+//         status: document.getElementById("status").value === "true",
+//         thumbnails: document.getElementById("thumbnails").value.split(",").map(item => item.trim())
+//     };
+//     socket.emit("addProduct", product);
+// };
 
 
 //CHAT
