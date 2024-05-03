@@ -6,12 +6,29 @@ const productManager = new ProductManager();
 
 //Mostar productos - limite
 router.get("/", async (req, res) => {
-    // const page = req.query.page || 1;
-    // const limit = req.query.limit || 20; // Límite de productos por página
+     const page = req.query.page || 1;
+    const limit = req.query.limit || 20; 
     try {
-        const products = await ProductsModel.paginate();
-       // console.log(products)
-        res.send(products);
+        const products = await productManager.getProducts({
+            limit: parseInt(limit),
+            page: parseInt(page),
+            sort,
+            query,
+        });
+      
+        res.json({
+            status: 'success',
+            payload: products,
+            totalPages: products.totalPages,
+            prevPage: products.prevPage,
+            nextPage: products.nextPage,
+            page: products.page,
+            hasPrevPage: products.hasPrevPage,
+            hasNextPage: products.hasNextPage,
+            prevLink: products.hasPrevPage,
+            nextLink: products.hasNextPage
+        });
+       
     } catch (error) {
         res.status(500).send("Error al obtener los productos");
     }

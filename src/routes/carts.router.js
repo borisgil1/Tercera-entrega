@@ -107,7 +107,7 @@ router.delete("/:cid/products/:pid", async (req, res) => {
 
 //Actualizar productos del carrito
 router.put("/:id", async (req, res) => {
-    const  cid  = req.params.id;
+    const cid = req.params.id;
     console.log(cid)
     const { product, quantity } = req.body;
     console.log("Productos recibidos:", product);
@@ -120,43 +120,35 @@ router.put("/:id", async (req, res) => {
         //console.log("Carrito modificado:", cartUpdated);
         return res.status(200).send({ message: "Carrito modificado", cart: cartUpdated });
     } catch (error) {
-       //console.error("Error al modificar el carrito:", error);
+        //console.error("Error al modificar el carrito:", error);
         return res.status(500).send("Error al modificar el carrito");
     }
 })
 
 //Actualizar cantidad de productos del carrito
 router.put("/:cid/products/:pid", async (req, res) => {
-    let cid = req.params.cid;
-    let pid = req.params.pid;
-    console.log(cid);
-    console.log(pid);
-    const quantity = req.body;
-    console.log(quantity);
+    const cid = req.params.cid;
+    const pid = req.params.pid;
+    const quantity = req.body.quantity;
     try {
-        const cartUpdated = await cartManager.updateCart(cid, quantity);
-        if (!cartUpdated) {
-            return res.status(404).send({ message: "Carrito no encontrado" });
-        }
-        //console.log("Carrito modificado:", cartUpdated);
-        return res.status(200).send({ message: "Carrito modificado", cart: cartUpdated });
+        const cartUpdated = await cartManager.updateQuantity(cid, pid, quantity);
+        return res.status(200).send({ message: "Cantidad del producto modifiactualizada", cart: cartUpdated });
     } catch (error) {
-       //console.error("Error al modificar el carrito:", error);
         return res.status(500).send("Error al modificar el carrito");
     }
 })
 
 
 //Vaciar carrito
-router.delete("/carts/:cid", async (req, res) => {
-    let id = req.params.cid; // Se debe utilizar req.params.cid en lugar de req.params.id
+router.delete("/:cid", async (req, res) => {
+    let id = req.params.cid;
     console.log(id)
     try {
-        const updatedCart = await cartManager.clearCart(id); // Utilizar el método 'clearCart'
+        const updatedCart = await cartManager.clearCart(id);
         if (!updatedCart) {
             return res.status(404).send({ message: "Carrito no encontrado" });
         }
-        return res.status(200).send({ message: "Carrito vaciado", cart: updatedCart });
+        return res.status(200).send({ message: "Todos los productos del carrito han sido eliminados", cart: updatedCart });
     } catch (error) {
         return res.status(500).send("Error al vaciar el carrito");
     }

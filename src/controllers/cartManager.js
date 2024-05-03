@@ -37,15 +37,15 @@ class CartManager {
         }
     }
 
-    async updateCart(id, updatedFields) {
+    async updateCart(cartId, updatedProducts) {
         try {
-            const updatedCart = await CartsModel.findByIdAndUpdate(id, updatedFields, { new: true });
-            if (!updatedCart) {
-                console.log("Carrito no encontrado");
-                return null;
+            const cart = await CartsModel.findById(cartId);
+            if (!cart) {
+                throw new Error("Carrito no encontrado");
             }
-            console.log("Carrito actualizado correctamente:", updatedCart);
-            return updatedCart;
+            cart.products=updatedProducts;
+            await cart.save();
+            return cart;
         } catch (error) {
             console.error("Error al actualizar carrito:", error);
             throw error; 
@@ -54,7 +54,7 @@ class CartManager {
 
     async deleteCart(id) {
         try {
-            const deletedCart = await CartsModel.findByIdAndDelete(id);
+            const cadeletedCartrt = await CartsModel.findByIdAndDelete(id);
             if (!deletedCart) {
                 console.log("Carrito no encontrado");
                 return null;
@@ -66,21 +66,43 @@ class CartManager {
         }
     }
 
-    async clearCart(id) {
+    async clearCart(cartId) {
         try {
-            const updatedCart = await CartsModel.findByIdAndUpdate(id, { $set: { products: [] } }, { new: true });
-            if (!updatedCart) {
+            const emptyCart = await CartsModel.findByIdAndUpdate(cartId, { products: [] }, { new: true });
+            if (!emptyCart) {
                 console.log("Carrito no encontrado");
-                return null;
             }
             console.log("Carrito vaciado correctamente");
-            return updatedCart;
+            return emptyCart;
         } catch (error) {
             console.error("Error al vaciar el carrito:", error);
             throw error; 
         }
     }
+
+    async updateQuantity(cartId, productId, quantity) {
+        try {
+            const cart = await CartsModel.findById(cartId);
+            if (!cart) {
+                console.log("Carrito no encontrado");
+            }
+            const productIndex = cart.products.findIndex(product=>product.product._id.toString()===productId);
+            if(productIndex !==-1) {
+                cart.products[productIndex].quantity=quantity;
+                await cart.save();
+                return cart;
+            } else {
+                console.log("Producto no encontrado en el carrito")
+            }
+        } catch (error) {
+            console.error("Error al modificar cantidades:", error);
+            throw error; 
+        }
+    }
+
 }
+
+
 
 
 module.exports = CartManager;
