@@ -37,7 +37,7 @@ socket.on("products", (products) => {
             button.addEventListener("click", async () => {
                 const cid = "66300b9804b8fabc11cf2904";
                 const pid = button.getAttribute("data-id");
-                const quantity = +1
+                const quantity = 1
                 await addProductToCart(cid, pid, quantity) ;
             });
         });

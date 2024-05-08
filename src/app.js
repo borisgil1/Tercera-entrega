@@ -1,5 +1,4 @@
 const express = require("express");
-const path = require("path");
 const PUERTO = 8080;
 const app = express();
 const productsRouter = require("./routes/products.router.js");
@@ -7,15 +6,24 @@ const cartsRouter = require("./routes/carts.router.js");
 const viewsRouter = require("./routes/views.router.js");
 const exphbs = require("express-handlebars");
 const socket = require("socket.io");
-//const fs = require("fs");
 const ProductManager = require("./controllers/productManager.js");
 const productManager = new ProductManager();
 require("./database.js");
 const MessagesModel = require("./models/messages.model.js")
-//verificar
 const CartManager = require("./controllers/cartManager.js");
 const cartManager = new CartManager();
-
+//cookies 
+const session = require("express-session");
+const cookieParser = require("cookie-parser");
+//FileStore
+const FileStore = require("session-file-store");
+//login
+const userRouter = require("./routes/user.router.js");
+const sessionRouter = require("./routes/session.router.js");
+//MongoStore
+const MongoStore = require("connect-mongo");
+//filestore
+const fileStore = new FileStore(session);
 
 //Handlebar
 app.engine("handlebars", exphbs.engine());
@@ -26,11 +34,24 @@ app.set("views", "./src/views");
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("./src/public"));
+app.use(cookieParser());
+app.use(session({
+    secret: "secretCoder", 
+    resave: true, 
+    saveUninitialized: true, 
+    store: MongoStore.create({
+        mongoUrl: "mongodb+srv://coderhouse:coderhouse@cluster0.2zgtivj.mongodb.net/ecommerce?retryWrites=true&w=majority&appName=Cluster0", ttl:100
+    })
+}))
+
 
 //Rutas
 app.use("/api/products", productsRouter);
 app.use("/api/carts", cartsRouter);
 app.use("/", viewsRouter);
+app.use("/api/sessions", sessionRouter)
+app.use("/api/users", userRouter)
+
 
 //Listen
 const httpServer = app.listen(PUERTO, () => {
