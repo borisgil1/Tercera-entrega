@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const UserModel = require("../models/user.model.js")
+const { isValidPassword } = require("../utils/hashbcrypt.js");
 
 
 //Verificamos el usuario: 
@@ -9,16 +10,17 @@ router.post("/login", async (req, res) => {
     try {
         const user = await UserModel.findOne({ email: email });
         if (user) {
-            if (user.password === password) {
+            if (isValidPassword(password, user)) {
                 req.session.login = true,
                     req.session.user = {
                         first_name: user.first_name,
                         last_name: user.last_name,
                         email: user.email,
                         password: user.password,
-                        age: user.age
+                        age: user.age,
+                        role: user.role
                     }
-                res.redirect("/profile");
+                res.redirect("/products");
             } else {
                 res.status(401).send("Contraseña no válida");
             }
@@ -32,14 +34,13 @@ router.post("/login", async (req, res) => {
 
 
 //Cerrar sesion:
-
-router.post("/logout", (req, res)=>{
-        if (req.session.login) {
-            req.session.destroy();
-            //res.send("Sesión Cerrada!");
-        } 
-            res.redirect("/login")
-    })
+router.get("/logout", (req, res) => {
+    if (req.session.login) {
+        req.session.destroy();
+        //res.send("Sesión Cerrada!");
+    }
+    res.redirect("/login")
+})
 
 
 

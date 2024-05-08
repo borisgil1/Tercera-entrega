@@ -6,11 +6,11 @@ const productManager = new ProductManager();
 
 //Mostar productos - limite
 router.get("/", async (req, res) => {
-     const page = req.query.page || 1;
-    const limit = req.query.limit || 20; 
+    const page = req.query.page || 1;
+    const limit = req.query.limit || 20;
     try {
         const products = await ProductsModel.paginate();
-      
+
         res.json({
             status: 'success',
             payload: products,
@@ -23,7 +23,7 @@ router.get("/", async (req, res) => {
             prevLink: products.hasPrevPage,
             nextLink: products.hasNextPage
         });
-       
+
     } catch (error) {
         res.status(500).send("Error al obtener los productos");
     }
