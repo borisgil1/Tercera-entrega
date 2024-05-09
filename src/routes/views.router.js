@@ -31,7 +31,10 @@ router.get("/products", async (req, res) => {
 });
 
 router.get("/", (req, res) => {
-    res.render("home");
+    if (req.session.login) {
+        return res.redirect("/products")
+    }
+    res.render("login");
 })
 
 router.get("/realtimeproducts", (req, res) => {
@@ -47,8 +50,11 @@ router.get("/chat", (req, res) => {
 })
 
 router.get("/login", (req, res) => {
+    if (req.session.login) {
+        return res.redirect("/products")
+    }
     res.render("login");
-});
+})
 
 router.get("/profile", (req, res) => {
     if (!req.session.login) {
@@ -58,6 +64,9 @@ router.get("/profile", (req, res) => {
 })
 
 router.get("/register", (req, res) => {
+    if (req.session.login) {
+        res.render("profile");
+    }
     res.render("register");
 })
 

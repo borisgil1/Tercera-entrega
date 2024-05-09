@@ -6,18 +6,14 @@ const { createHash } = require("../utils/hashbcrypt.js");
 
 //Registra el usuario y lo guarda
 router.post("/", async (req, res) => {
-    const { first_name, last_name, email, password, age } = req.body;
+    const { first_name, last_name, email, password, age, role } = req.body;
     try {
         const existingUser = await UserModel.findOne({ email: email });
         if (existingUser) {
             return res.status(400).send("El correo ya está registrado")
         }
 
-        const role = email === 'admincoder@coder.com' ? 'admin' : 'usuario'
-
-        if (email === 'admincoder@coder.com') {
-            password = 'adminCod3r123';
-        }
+        const role = email === 'admincoder@coder.com' ? 'admin' : 'usuario';
 
         const newUser = await UserModel.create({ first_name, last_name, email, password: createHash(password), age, role });
 

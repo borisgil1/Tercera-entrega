@@ -20,6 +20,7 @@ router.post("/login", async (req, res) => {
                         age: user.age,
                         role: user.role
                     }
+
                 res.redirect("/products");
             } else {
                 res.status(401).send("Contraseña no válida");
