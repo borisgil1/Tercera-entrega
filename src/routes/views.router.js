@@ -2,7 +2,11 @@ const express = require("express");
 const router = express.Router();
 const ProductManager = require("../controllers/productManager")
 const ProductsModel = require("../models/products.model.js");
+const CartManager = require("../controllers/cartManager")
+const cartManager = new CartManager("src/models/cartManager.json")
 const productManager = new ProductManager("src/models/productManager.json")
+
+
 
 router.get("/products", async (req, res) => {
     const page = parseInt(req.query.page) || 1;
@@ -69,5 +73,33 @@ router.get("/register", (req, res) => {
     }
     res.render("register");
 })
+
+
+//vista cart
+router.get("/carts/:cid", async (req, res) => {
+    let cid = req.params.cid;
+    try {
+        const cart = await cartManager.getCartById(cid);
+
+        if (cart) {
+
+            const productsInCar = cart.products.map(item => ({
+                product: item.product.toObject(),
+                //Lo convertimos a objeto para pasar las restricciones de Exp Handlebars. 
+                quantity: item.quantity
+            }));
+
+            res.render("carts", { products: productsInCar });
+
+        } else {
+            return res.status(404).send("Carrito no encontrado")
+        }
+
+    } catch (error) {
+        console.error("Error al mostrar carrito", error);
+        return res.status(500).send("Error al mostrar carrito");
+    }
+});
+
 
 module.exports = router;

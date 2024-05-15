@@ -1,48 +1,56 @@
+//Rutas login
+
 const express = require("express");
 const router = express.Router();
-const UserModel = require("../models/user.model.js")
-const { isValidPassword } = require("../utils/hashbcrypt.js");
+const passport = require("passport");
 
 
-//Verificamos el usuario: 
-router.post("/login", async (req, res) => {
-    const { email, password } = req.body;
-    try {
-        const user = await UserModel.findOne({ email: email });
-        if (user) {
-            if (isValidPassword(password, user)) {
-                req.session.login = true,
-                    req.session.user = {
-                        first_name: user.first_name,
-                        last_name: user.last_name,
-                        email: user.email,
-                        password: user.password,
-                        age: user.age,
-                        role: user.role
-                    }
+//Version passport, usamos el middleware de passport
+router.post("/login", passport.authenticate("login", {
+    failureRedirect: "/api/sessions/faillogin"
+}), async (req, res) => {
+    if (!req.user) {
+        return res.status(400).send("Credenciales invalidas");
+    } else {
 
-                res.redirect("/products");
-            } else {
-                res.status(401).send("Contraseña no válida");
-            }
-        } else {
-            res.status(404).send("Usuario no encontrado");
+        //generamos la sesion
+        req.session.user = {
+            first_name: req.first_name,
+            last_name: req.last_name,
+            age: req.age,
+            email: req.email,
         }
-    } catch (error) {
-        return res.status(400).send("Error en el login");
     }
-});
 
+    //indicar que el usuario inició sesión correctamente
+    req.session.login = true;
+
+    res.redirect("/products")
+})
+
+router.get("/faillogin", async (req, res)=>{
+    res.send("Login fallido");
+})
 
 //Cerrar sesion:
 router.get("/logout", (req, res) => {
     if (req.session.login) {
         req.session.destroy();
-        //res.send("Sesión Cerrada!");
     }
     res.redirect("/login")
 })
 
 
+//Version Github 
+router.get("/github", passport.authenticate("github",{scope: ["user:email"]})), async (req, res)=>{
+}
 
+router.get("/githubcallback", passport.authenticate("github", {
+    failureRedirect: "/login"}), async (req, res) => {
+        //Retrona el usuario, lo argego a mi objeto de Session:
+        req.session.user = req.user;
+        req.session.login = true;
+        res.redirect("/profile")
+    }),
+    
 module.exports = router;

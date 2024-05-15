@@ -24,6 +24,10 @@ const sessionRouter = require("./routes/session.router.js");
 const MongoStore = require("connect-mongo");
 //filestore
 const fileStore = new FileStore(session);
+//passport
+const passport = require("passport");
+const initializePassport = require("./config/passport.config.js");
+
 
 //Handlebar
 app.engine("handlebars", exphbs.engine());
@@ -43,6 +47,10 @@ app.use(session({
         mongoUrl: "mongodb+srv://coderhouse:coderhouse@cluster0.2zgtivj.mongodb.net/ecommerce?retryWrites=true&w=majority&appName=Cluster0", ttl:100
     })
 }))
+//Passport
+app.use(passport.initialize());
+app.use(passport.session());
+initializePassport();
 
 
 //Rutas

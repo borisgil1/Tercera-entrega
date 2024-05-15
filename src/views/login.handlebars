@@ -25,11 +25,15 @@
                             <button type="submit" class="btn btn-primary btn-block">Iniciar sesión</button>
                         </form>
                         <!-- Botón de registro -->
-                          <form action="/register" method="GET">
                         <div class="text-center mt-3">
-                          <button type="submit" class="btn btn-primary btn-block">Registrarse</button>
+                            <form action="/register" method="GET">
+                                <button type="submit" class="btn btn-primary btn-block">Registrarse</button>
+                            </form>
                         </div>
-                        </form>
+                        <!-- Botón de inicio de sesión con GitHub -->
+                        <div class="text-center mt-3">
+                            <a href="/api/sessions/github" class="btn btn-dark btn-block">Iniciar sesión con GitHub</a>
+                        </div>
                     </div>
                 </div>
             </div>

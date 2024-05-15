@@ -128,7 +128,7 @@ class CartManager {
 
             await foundCart.save();
             console.log(foundCart)
-
+            console.log("Producto agregado al carrito con éxito")
             return { message: "Producto agregado al carrito con éxito", cart: foundCart };
         } catch (error) {
             console.error("Error al agregar producto al carrito:", error);
