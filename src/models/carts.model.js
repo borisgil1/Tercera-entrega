@@ -1,3 +1,5 @@
+//Modelo, conexion con la bdd
+
 const mongoose = require("mongoose");
 
 //Schema

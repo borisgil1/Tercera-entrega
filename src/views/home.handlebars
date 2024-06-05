@@ -8,9 +8,9 @@
 </head>
 <body>
     <div class="container mt-4">
-    <h2>Bienvenido, {{req.user.first_name}} {{user.last_name}}</h2>
-        <p>Correo electrónico: {{ user.email }}</p>
-        <p>Edad: {{ user.age }}</p>
+        <h2>Bienvenido, {{first_name}} {{last_name}}</h2>
+        <p>Correo electrónico: {{email}}</p>
+        <p>Rol: {{rol}}</p>
         <form action="/api/sessions/logout" method="GET">
             <button type="submit" class="btn btn-primary">Cerrar sesión</button>
         </form>

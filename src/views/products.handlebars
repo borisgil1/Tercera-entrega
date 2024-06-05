@@ -19,7 +19,7 @@
     {{#if user}}
     <header>
         <h1>Tienda BarisGamer</h1>
-        <h2>Bienvenido, {{req.first_name}} {{user.last_name}}</h2>
+        <h2>Bienvenido, {{user.first_name}} {{user.last_name}}</h2>
         <p>Rol: {{user.role}} </p>
         <form action="/api/sessions/logout" method="GET">
             <button type="submit" class="btn btn-primary">Cerrar sesión</button>

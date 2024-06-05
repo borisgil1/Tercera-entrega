@@ -1,7 +1,9 @@
+//Repository: Se conecta con la bdd, con la persistencia de la información
+
 const CartsModel = require("../models/carts.model");
 const ProductsModel = require("../models/products.model");
 
-class CartManager {
+class CartRepository {
 
     async addCart(newCartData) {
         try {
@@ -139,4 +141,4 @@ class CartManager {
 
 
 
-module.exports = CartManager;
+module.exports = CartRepository;

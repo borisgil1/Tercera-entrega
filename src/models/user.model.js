@@ -6,24 +6,20 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-
     last_name: {
         type: String,
         //required: true
     },
-
     email: {
         type: String,
         required: true,
-        index: true,
-        unique: true
+        index: true, 
+        unique: true 
     },
-
     password: {
         type: String,
         //required: true
     },
-
     age: {
         type: Number,
         //required: true
@@ -35,6 +31,7 @@ const userSchema = new mongoose.Schema({
     }
 })
 
+//                           siempre en plural
 const UserModel = mongoose.model("usuarios", userSchema)
 
 module.exports = UserModel;

@@ -1,32 +1,44 @@
+//App: Inicializa el servidor
+
+//Express
 const express = require("express");
-const PUERTO = 8080;
+//Creamos nuestra app
 const app = express();
+const PUERTO = 8080;
+//Rutas
 const productsRouter = require("./routes/products.router.js");
 const cartsRouter = require("./routes/carts.router.js");
 const viewsRouter = require("./routes/views.router.js");
+const userRouter = require("./routes/user.router.js");
+const sessionRouter = require("./routes/session.router.js");
+//Handlebars
 const exphbs = require("express-handlebars");
 const socket = require("socket.io");
-const ProductManager = require("./controllers/productManager.js");
-const productManager = new ProductManager();
+//Repository
+const ProductRepository = require("./repository/product.repository.js");
+const productRepository = new ProductRepository();
+const CartRepository = require("./repository/cart.repository.js");
+const cartRepository = new CartRepository();
+//Base de datos
 require("./database.js");
+//Chat
 const MessagesModel = require("./models/messages.model.js")
-const CartManager = require("./controllers/cartManager.js");
-const cartManager = new CartManager();
-//cookies 
+//Cookies 
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
 //FileStore
 const FileStore = require("session-file-store");
-//login
-const userRouter = require("./routes/user.router.js");
-const sessionRouter = require("./routes/session.router.js");
+//const fileStore = new FileStore(session);
 //MongoStore
 const MongoStore = require("connect-mongo");
-//filestore
-const fileStore = new FileStore(session);
-//passport
+//Passport
 const passport = require("passport");
 const initializePassport = require("./config/passport.config.js");
+//Config Object
+const configObject = require("./config/config.js")
+const { mongo_url, port} = configObject;
+//Program
+//const program = require ("program");
 
 
 //Handlebar
@@ -47,6 +59,7 @@ app.use(session({
         mongoUrl: "mongodb+srv://coderhouse:coderhouse@cluster0.2zgtivj.mongodb.net/ecommerce?retryWrites=true&w=majority&appName=Cluster0", ttl:100
     })
 }))
+
 //Passport
 app.use(passport.initialize());
 app.use(passport.session());
@@ -63,7 +76,7 @@ app.use("/api/users", userRouter)
 
 //Listen
 const httpServer = app.listen(PUERTO, () => {
-    console.log(`Escuchando en el http://localhost:${PUERTO}`);
+    console.log(`Escuchando en el puerto ${PUERTO}`);
 })
 
 //instancia Socket del servidor
@@ -74,27 +87,28 @@ io.on("connection", async (socket) => {
     console.log("Un cliente se conectó");
 
     //Enviar mensaje para renderizar productos
-    const products = await productManager.getProducts();
+    const products = await productRepository.getProducts();
     socket.emit("products", products);
     //console.log(products)
 
     //Recibir evento agg producto al carrito
     socket.on("addProductToCart", async (cid, pid, quantity) => {
-        await cartManager.addProductToCart(cid, pid, quantity);
+        await cartRepository.addProductToCart(cid, pid, quantity);
         //Evniamos array actualizado
-        socket.emit("addProductToCart", await cartManager.addProductToCart(cid, pid, quantity));
+        socket.emit("addProductToCart", await cartRepository.addProductToCart(cid, pid, quantity));
     })
 
     //Recibir evento agg producto desde cliente con formulario
     socket.on("addProduct", async (product) => {
-        await productManager.addProduct(product.title, product.description, product.price, product.img, product.code, product.stock, product.category, product.status);
-        socket.emit("products", await productManager.getProducts());
+        await productRepository.addProduct(product.title, product.description, product.price, product.img, product.code, product.stock, product.category, product.status);
+        socket.emit("products", await productRepository.getProducts());
         //io.emit("products", await productManager.getProducts());
     })
 });
 
 
 //const io = new socket.Server(httpServer)
+
 //chat
 io.on("connection", (socket) => {
     console.log("Nuevo usuario conectado");
@@ -108,3 +122,11 @@ io.on("connection", (socket) => {
         io.emit("messagesLogs", messages);
     })
 })
+
+//////////////////////////////////////////
+
+// console.log(process.cwd());
+// console.log(process.pid);
+// console.log(process.memoryUsage());
+// console.log(process.version); 
+
