@@ -5,6 +5,7 @@ const ProductsModel = require("../models/products.model");
 
 class CartRepository {
 
+    //Agregar carrito
     async addCart(newCartData) {
         try {
             const newCart = await CartsModel.create(newCartData);
@@ -15,6 +16,7 @@ class CartRepository {
         }
     }
 
+    //Obtener todos los carritos
     async getCarts() {
         try {
             const carts = await CartsModel.find();
@@ -25,6 +27,7 @@ class CartRepository {
         }
     }
 
+    //Obtener carrito por id
     async getCartById(id) {
         try {
             const cart = await CartsModel.findById(id);
@@ -40,7 +43,7 @@ class CartRepository {
         }
     }
 
-    //actualizar carrito por prodcuto y cantidad
+    //Actualizar producto y cantidad de un carrito
     async updateCart(cartId, updatedProducts) {
         try {
             const cart = await CartsModel.findById(cartId);
@@ -70,6 +73,7 @@ class CartRepository {
     //     }
     // }
 
+    //Vaciar carrito
     async emptyCart(cartId) {
         try {
             const emptyCart = await CartsModel.findByIdAndUpdate(cartId, { products: [] }, { new: true });

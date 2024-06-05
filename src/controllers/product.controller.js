@@ -1,31 +1,18 @@
+const ProductRepository = require("../repository/product.repository");
 const {productService} = require("../service/index");
 
 
 class productController {
 
-    //Mostar productos - limite
+    //Mostar productos
     async getProducts(req, res) {
-        const page = req.query.page || 1;
-        const limit = req.query.limit || 20;
-        try {
-            const products = await productService.paginate();
-
-            res.json({
-                status: 'success',
-                payload: products,
-                totalPages: products.totalPages,
-                prevPage: products.prevPage,
-                nextPage: products.nextPage,
-                page: products.page,
-                hasPrevPage: products.hasPrevPage,
-                hasNextPage: products.hasNextPage,
-                prevLink: products.hasPrevPage,
-                nextLink: products.hasNextPage
-            });
-
-        } catch (error) {
-            res.status(500).send("Error al obtener los productos");
-        }
+       try {
+        const products = await productService.getProducts();
+        return res.send(products);
+       } catch (error) {
+        console.error("Error al mostrar productos", error);
+        return res.status(500).send("Error al mostrar productos");
+       }
     };
 
     //Mostrar productos por ID
@@ -47,7 +34,7 @@ class productController {
     async addProduct(req, res) {
         const newProduct = req.body;
         try {
-            const existingProduct = await productService.findOne({ code: newProduct.code });
+            const existingProduct = await productService.addProduct({ code: newProduct.code });
             if (existingProduct) {
                 // Si existe un producto con el mismo código, devuelve un mensaje de error
                 return res.status(400).json({ message: "El código debe ser único" });
