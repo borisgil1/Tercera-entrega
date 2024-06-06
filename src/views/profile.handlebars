@@ -1,79 +1,105 @@
-{{!-- <h1>Mi Perfil</h1>
-<p>Bienvenido!, {{user.nombre}} {{user.apellido}}!</p>
-<p>Role: {{user.role}} </p>
+<!DOCTYPE html>
+<html lang="es">
 
-<form action="/api/users/logout" method="POST">
-  <button class="btnMios" type="submit">Logout</button>
-</form>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mi Perfil</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    h1 {
+      text-align: center;
+      margin-top: 20px;
+    }
 
-{{#if this.isAdmin}}
-  <a href="/realtimeproducts"> Modificar Productos </a>
-{{else}}
-  <a href="/chat"> Chat en vivo</a>
-  <a href="/products"> Tienda </a>
-{{/if}} --}}
+    .profile-card {
+      max-width: 400px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f2f2f2;
+      border-radius: 5px;
+      text-align: center;
+    }
 
-{{!-- Con CSS --}}
+    .profile-card p {
+      margin-bottom: 10px;
+    }
 
+    .profile-card .btnMios {
+      display: block;
+      margin: 20px auto;
+      padding: 10px 20px;
+      background-color: #6a1b9a; /* Color púrpura */
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
 
-<style>
-  h1 {
-    text-align: center;
-    margin-top: 20px;
-  }
+    .profile-card .btnMios:hover {
+      background-color: #9932CC; /* Cambio de color al hacer hover */
+    }
 
-  .profile-card {
-    max-width: 400px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #f2f2f2;
-    border-radius: 5px;
-    text-align: center;
-  }
+    .profile-card a {
+      display: block;
+      margin-bottom: 10px;
+      color: #6a1b9a; 
+      text-decoration: none;
+      font-weight: bold;
+    }
+  </style>
+</head>
 
-  .profile-card p {
-    margin-bottom: 10px;
-  }
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <a class="navbar-brand" href="#">
+      <img src="img/logo.PNG" alt="Logo" width="180" height="80" class="d-inline-block align-top">
+    </a>
+    <div class="navbar-center">Boris Gamer</div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" href="/products">Tienda</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/login">Login</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/register">Registrarse</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/profile">Mi Perfil</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
 
-  .profile-card .btnMios {
-    display: block;
-    margin: 20px auto;
-    padding: 10px 20px;
-    background-color: #c1101a;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
-  }
+  <h1 class="mt-2 mb-2">Mi perfil</h1>
 
-  .profile-card .btnMios:hover {
-    background-color: #ff1f33;
-  }
+  <div class="profile-card">
+    <p>Bienvenido, {{user.nombre}} {{user.apellido}}!</p>
+    <p>Rol: {{user.role}}</p>
 
-  .profile-card a {
-    display: block;
-    margin-bottom: 10px;
-    color: #c1101a;
-    text-decoration: none;
-    font-weight: bold;
-  }
-</style>
+    <form action="/api/users/logout" method="POST">
+      <button class="btnMios" type="submit">Logout</button>
+    </form>
 
-<h1>Mi Perfil</h1>
-
-<div class="profile-card">
-  <p>Bienvenido, {{user.nombre}} {{user.apellido}}!</p>
-  <p>Rol: {{user.role}}</p>
-
-  <form action="/api/users/logout" method="POST">
-    <button class="btnMios" type="submit">Logout</button>
-  </form>
-
-  {{#if this.isAdmin}}
+    {{#if this.isAdmin}}
     <a class="btnMios" href="/realtimeproducts">Modificar Productos</a>
-  {{else}}
+    {{else}}
     <a class="btnMios" href="/chat">Chat en vivo</a>
     <a class="btnMios" href="/products">Tienda</a>
-  {{/if}}
-</div>
+    {{/if}}
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>

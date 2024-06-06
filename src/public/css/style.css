@@ -1,11 +1,11 @@
 h1 {
-    color: black;
+    color:#6a1b9a;
     text-align: center;
     font-size: 40px;
 }
 
 h2 {
-    color: green;
+    color: #6a1b9a;;
     font-size: 25px;
 }
 
@@ -54,3 +54,18 @@ body {
   background-color: #6a1b9a !important;
 }
 
+.btnAddtoCart {
+    color: #ffffff;
+    background-color: #6a1b9a;
+    border-radius: 5px; /* Hace que el botón sea redondeado */
+    padding: 10px 20px; /* Ajusta el relleno para que el botón sea más grande */
+    border: none; /* Elimina el borde */
+    cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
+    transition: background-color 0.3s; /* Agrega una transición suave al cambio de color de fondo */
+    display: block; /* Hace que el botón sea un bloque */
+    margin: 0 auto; /* Centra el botón horizontalmente */
+}
+
+.btnAddtoCart:hover {
+    background-color: #4a148c; /* Cambia el color de fondo al pasar el ratón sobre el botón */
+}

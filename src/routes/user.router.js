@@ -1,43 +1,33 @@
-//Rutas para el registro
-
 const express = require("express");
 const router = express.Router();
 const passport = require("passport");
 const UserController = require("../controllers/user.controller.js");
 const userController = new UserController
-//Rutas login
-const jwt = require("jsonwebtoken");
 
 
-// //Version passport, usamos el middleware de passport
-// router.post("/login", )
+//Register
+router.post("/register", userController.register)
 
-//Login con cookies JWT 
+//Login 
 router.post("/login", userController.loginJwt)
 
+//Login Github
 router.get("/github", passport.authenticate("github", { scope: ["user:email"] }));
   
-router.get("/githubcallback", passport.authenticate("github", { failureRedirect: "./login" })),
+//Callback Github
+router.get("/githubcallback", passport.authenticate("github", { failureRedirect: "/login" }), userController.githubCallback);
 
-//Cerrar sesion con JWT:
+//Cerrar sesion
 router.post("/logout", userController.logout)
 
-//home
+//Admin
 router.get("/admin", passport.authenticate("jwt", { session: false }), userController.admin);
-    
-//router.get("/profile", passport.authenticate("jwt", { session: false }), userController.profile);
 
-router.get("/githubcallback", passport.authenticate("github", { failureRedirect: "/login" }),userController.githubCallback);
-
-module.exports = router;
-// router.get("/failedregister", (req, res) => {
-//     res.send("Registro fallido");
-// })
+//Perfil
+router.get("/profile", passport.authenticate("jwt", { session: false }), userController.profile);
 
 
-// ////////// Registro con JWT////////////////////////////////////////////////
-
-router.post("/", userController.register)
+//Home
 router.get("/home", passport.authenticate("jwt"));
 
 module.exports = router;

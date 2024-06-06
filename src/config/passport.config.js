@@ -14,19 +14,21 @@ const GitHubStrategy = require("passport-github2");
 
 //Funcion initialize Passport
 const initializePassport = () => {
-    passport.use("jwt", new JWTStrategy({
-        jwtFromRequest: ExtractJwt.fromExtractors([cookieExtractor]), // Utiliza ExtractJwt.fromExtractors para extraer el token de la cookie
-        secretOrKey: "coderhouse"
+
+   passport.use("jwt", new JWTStrategy({
+        //extrae el token de la cookie
+        jwtFromRequest: ExtractJwt.fromExtractors([cookieExtractor]),
+        //palabra secreta
+        secretOrKey: "coderhouse", //misma que tenemos en la app
+        //funcion callback, payload, y metodo done (next)
     }, async (jwt_payload, done) => {
         try {
-            // Busca el usuario en la base de datos usando el ID del payload JWT
-            const user = await UserModel.findById(jwt_payload.user._id);
-            if (!user) {
-                return done(null, false);
-            }
-            return done(null, user); // Devuelve el usuario encontrado
+            //retorna done, la data del usuario queda cargada en la app
+            //null por convencion de callback y jwt=la data del usario
+            return done(null, jwt_payload)
+
         } catch (error) {
-            return done(error);
+            return done(error)
         }
     }));
 
@@ -48,9 +50,9 @@ const initializePassport = () => {
 
 //Estrategia GitHub
 passport.use("github", new GitHubStrategy({
-    clientID: "Iv23lioElT1WDsKkIYOd",
-    clientSecret: "b6ba3fd2fae4f054c6d40630b42c78bcbd80f5b6",
-    callbackURL: "http://localhost:8080/api/sessions/githubcallback"
+    clientID: "Iv23li2pdqvE2618g9dw",
+    clientSecret: "8f2037334139d81d5e04da2843dd036837cee757",
+    callbackURL: "http://localhost:8080/api/users/githubcallback"
 
 }, async (accessToken, refreshToken, profile, done) => {
     //Veo los datos del perfil

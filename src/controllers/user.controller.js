@@ -46,7 +46,7 @@ class UserController {
             //                Clave        valor          tiempo     solo se accede desde http
             res.cookie("coderCookieToken", token, { maxAge: 60 * 60 * 1000, httpOnly: true });
 
-            //una vez me registro me lleva al home
+            //una vez me registro me lleva al perfil
             res.redirect("/api/users/profile")
 
         } catch (error) {
@@ -153,7 +153,7 @@ class UserController {
 
             //Establecer token como cookie
             res.cookie("coderCookieToken", token, { maxAge: 60 * 60 * 1000, httpOnly: true });
-            res.redirect("/home")
+            res.redirect("/api/users/profile")
 
         } catch (error) {
             res.status(500).send("Error interno del servidor")
@@ -176,6 +176,11 @@ class UserController {
             return res.status(403).send("Acceso denegado");
         }
         res.render("admin");
+    }
+
+
+    async profile(req, res) {
+        res.render("profile");
     }
 
     //Ruta current 
