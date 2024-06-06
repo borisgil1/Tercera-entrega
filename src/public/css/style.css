@@ -1,5 +1,5 @@
 h1 {
-    color: red;
+    color: black;
     text-align: center;
     font-size: 40px;
 }
@@ -12,3 +12,45 @@ h2 {
 .card-height {
     height: 200px;
 }
+
+body {
+    background-color: #f3e5f5;
+    color: #4a148c;
+}
+
+.navbar {
+    background-color: #6a1b9a;
+}
+
+.navbar-brand {
+    color: #ffffff !important;
+}
+
+.nav-link {
+    color: #ffffff !important;
+}
+
+.nav-link:hover {
+    color: #ce93d8 !important;
+}
+
+.navbar-center {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #ffffff;
+    font-size: 45px;
+    white-space: nowrap;
+}
+
+.main-image {
+    width: 100%;
+    height: auto;
+    margin: 20px 0;
+}
+
+.btnprimary {
+  color: #ffffff !important;
+  background-color: #6a1b9a !important;
+}
+

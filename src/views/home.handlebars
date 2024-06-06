@@ -1,19 +1,83 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Perfil de Usuario</title>
+    <title>Página de Inicio</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f3e5f5;
+            color: #4a148c;
+        }
+
+        .navbar {
+            background-color: #6a1b9a;
+        }
+
+        .navbar-brand {
+            color: #ffffff !important;
+        }
+
+        .nav-link {
+            color: #ffffff !important;
+        }
+
+        .nav-link:hover {
+            color: #ce93d8 !important;
+        }
+
+        .header-title {
+            color: #4a148c;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .main-image {
+            width: 100%;
+            height: auto;
+            margin: 20px 0;
+        }
+    </style>
 </head>
+
 <body>
-    <div class="container mt-4">
-        <h2>Bienvenido, {{first_name}} {{last_name}}</h2>
-        <p>Correo electrónico: {{email}}</p>
-        <p>Rol: {{rol}}</p>
-        <form action="/api/sessions/logout" method="GET">
-            <button type="submit" class="btn btn-primary">Cerrar sesión</button>
-        </form>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <a class="navbar-brand" href="#">
+            <img src="img/logo.PNG" alt="Logo" width="200" height="100" class="d-inline-block align-top">
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Inicio de Sesión</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Registrarse</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Mi Perfil</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Header Title -->
+    <h1 class="header-title">Boris Gamer</h1>
+
+    <!-- Main Image -->
+    <div class="container">
+        <img src="img/img.png" alt="Imagen Principal" class="img-fluid main-image">
     </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
+
 </html>

@@ -1,20 +1,56 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Página de Inicio</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        
+        body {
+            background-color: #f3e5f5;
+            color: #4a148c;
+        }
+
+    </style>
 </head>
-<body class="vh-100 d-flex align-items-center justify-content-center">
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <a class="navbar-brand" href="#">
+                <img src="img/logo.PNG" alt="Logo" width="180" height="80" class="d-inline-block align-top">
+        </a>
+        <div class="navbar-center">Boris Gamer</div>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Inicio de Sesión</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Registrarse</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Mi Perfil</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+<!-- Login Form -->
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-6">
                 <div class="card">
                     <div class="card-body">
-                        <h2 class="text-center mb-4">Iniciar sesión</h2>
-                        <form action="/api/sessions/login" method="POST">
-                            <div class="form-group">
+                        <h2 class="text-center">Iniciar sesión</h2>
+                        <form action="/api/users/login" method="POST">
+                            <div class="form-group mb-2">
                                 <label for="email">Correo electrónico:</label>
                                 <input type="email" id="email" name="email" class="form-control" required>
                             </div>
@@ -22,22 +58,27 @@
                                 <label for="password">Contraseña:</label>
                                 <input type="password" id="password" name="password" class="form-control" required>
                             </div>
-                            <button type="submit" class="btn btn-primary btn-block">Iniciar sesión</button>
+                            <button type="submit" class="btn btnprimary btn-block">Iniciar sesión</button>
                         </form>
                         <!-- Botón de registro -->
-                        <div class="text-center mt-3">
+                        <div class="text-center mt-2">
                             <form action="/register" method="GET">
-                                <button type="submit" class="btn btn-primary btn-block">Registrarse</button>
+                                <button type="submit" class="btn btn-secondary btn-block">Registrarse</button>
                             </form>
                         </div>
                         <!-- Botón GitHub -->
-                        <div class="text-center mt-3">
-                            <a href="/api/sessions/github" class="btn btn-dark btn-block">Iniciar sesión con GitHub</a>
+                        <div class="text-center mt-2">
+                            <a href="/api/users/github" class="btn btn-dark btn-block">Iniciar sesión con GitHub</a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
+
 </html>

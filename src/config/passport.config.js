@@ -1,93 +1,37 @@
 //Estrategias de passport
 
 const passport = require("passport");
-const local = require("passport-local");
 const UserModel = require("../models/user.model.js");
-const { createHash } = require("../utils/hashbcrypt.js");
-const { isValidPassword } = require("../utils/hashbcrypt.js");
 //passport-jwt
 const jwt = require("passport-jwt")
-
 //instanciar nueva estragegia
 const JWTStrategy = jwt.Strategy;
-
 //decodificar el tooken que está dentro de la cookie
-const Extractjwt = jwt.ExtractJwt;
-
+const ExtractJwt = jwt.ExtractJwt;
 //GitHub
 const GitHubStrategy = require("passport-github2");
-
-const LocalStrategy = local.Strategy;
 
 
 //Funcion initialize Passport
 const initializePassport = () => {
-
-    //middleware
-    //estrategia registro y login
-    passport.use("register", new LocalStrategy({
-        passReqToCallback: true,
-        usernameField: "email",
-    }, async (req, username, password, done) => {
-        //levantamos del body
-        const { first_name, last_name, email, age } = req.body;
-
+    passport.use("jwt", new JWTStrategy({
+        jwtFromRequest: ExtractJwt.fromExtractors([cookieExtractor]), // Utiliza ExtractJwt.fromExtractors para extraer el token de la cookie
+        secretOrKey: "coderhouse"
+    }, async (jwt_payload, done) => {
         try {
-            //verificacion si el email ya existe en la base de datos
-            let user = await UserModel.findOne({ email });
-
-            if (user) {
-                //si ya existe ejecutamos el done con el error
-                return done(null, false)
-            } else {
-                //si no existe creamos nuevo usuario
-                let newUser = {
-                    first_name,
-                    last_name,
-                    email,
-                    password: createHash(password),
-                    age
-                }
-
-                // cargamos en la bdd
-                let result = await UserModel.create(newUser);
-
-                // esto hace se carge en req.user la info del usuario
-                return done(null, result);
-            }
-
-        } catch (error) {
-            return done(error);
-        }
-    }))
- 
-    //Estrategia login
-    passport.use("login", new LocalStrategy({
-        usernameField: "email",
-    }, async (email, password, done) => {
-
-        try {
-            //verificacion si exite usuario con ese mail
-            let user = await UserModel.findOne({ email });
-
+            // Busca el usuario en la base de datos usando el ID del payload JWT
+            const user = await UserModel.findById(jwt_payload.user._id);
             if (!user) {
-                console.log("Este usuario no existe");
                 return done(null, false);
             }
-
-            //si existe verifico la contraseña
-            if (!isValidPassword(password, user)) {
-                return done(null, false);
-            }
-
-            // cargamos en req.user el usuario
-            return done(null, user);
-
+            return done(null, user); // Devuelve el usuario encontrado
         } catch (error) {
             return done(error);
         }
-    }))
+    }));
 
+ 
+ 
 
     //Serializar y deserializar: colocar el objeto del usuario en la session y quitarlo en el logout
     passport.serializeUser((user, done) => {
@@ -98,75 +42,54 @@ const initializePassport = () => {
         let user = await UserModel.findById({ _id: id })
         done(null, user);
     })
+}
 
+//////////////////////////////////////////////////////////////////////////
 
-    //Estrategia GitHub
-    passport.use("github", new GitHubStrategy({
-        clientID: "Iv23lioElT1WDsKkIYOd",
-        clientSecret: "b6ba3fd2fae4f054c6d40630b42c78bcbd80f5b6",
-        callbackURL: "http://localhost:8080/api/sessions/githubcallback"
+//Estrategia GitHub
+passport.use("github", new GitHubStrategy({
+    clientID: "Iv23lioElT1WDsKkIYOd",
+    clientSecret: "b6ba3fd2fae4f054c6d40630b42c78bcbd80f5b6",
+    callbackURL: "http://localhost:8080/api/sessions/githubcallback"
 
-    }, async (accessToken, refreshToken, profile, done) => {
-        //Veo los datos del perfil
-        console.log("Profile:", profile);
+}, async (accessToken, refreshToken, profile, done) => {
+    //Veo los datos del perfil
+    console.log("Profile:", profile);
 
-        try {
-            let user = await UserModel.findOne({ email: profile._json.email });
+    try {
+        let user = await UserModel.findOne({ email: profile._json.email });
 
-            if (!user) {
-                //Crear nuevo usuario si no existe
-                let newUser = {
-                    first_name: profile._json.name,
-                    last_name: "",
-                    age: 36,
-                    email: profile._json.email,
-                    password: ""
-                }
-
-                let result = await UserModel.create(newUser);
-                done(null, result);
-            } else {
-                done(null, user);
+        if (!user) {
+            //Crear nuevo usuario si no existe
+            let newUser = {
+                first_name: profile._json.name,
+                last_name: "",
+                age: 36,
+                email: profile._json.email,
+                password: ""
             }
-        } catch (error) {
-            return done(error);
+
+            let result = await UserModel.create(newUser);
+            done(null, result);
+        } else {
+            done(null, user);
         }
-    }))
-
-    //////////////////////////////////////////////////////////////////////////
-
-    //Estrategia passport-jwt 
-    //nueva instancia y le pasamos objeto de configuración, saca la info del request
-    passport.use("jwt", new JWTStrategy({
-        //extrae el token de la cookie
-        jwtFromRequest: Extractjwt.fromExtractors([cookieExtractor]),
-        //palabra secreta
-        secretOrKey: "coderhouse", //misma que tenemos en la app
-        //funcion callback, payload, y metodo done (next)
-    }, async (jwt_payload, done) => {
-        try {
-            //retorna done, la data del usuario queda cargada en la app
-            //null por convencion de callback y jwt=la data del usario
-            return done(null, jwt_payload)
-
-        } catch (error) {
-            return done(error)
-        }
-    }))
-}
-
-//funcion que decofidica la cookie, extractor de cookies
-
-const cookieExtractor = (req) => {
-    // inicializar la variable token como null
-    let token = null;
-    //si hay request y existen las cookies
-    if (req && req.cookies) {
-        //Si se dan las conidicones el token va a estar cargado con esta cookie 
-        token = req.cookies["coderCookieToken"];
+    } catch (error) {
+        return done(error);
     }
-    //si existe lo guardamos, y si lo podemos guardar lo enviamos, lo retornamos
-    return token;
-}
+}))
+
+   //funcion que decofidica la cookie, extractor de cookies
+   const cookieExtractor = (req) => {
+        // inicializar la variable token como null
+        let token = null;
+        //si hay request y existen las cookies
+        if (req && req.cookies) {
+            //Si se dan las conidicones el token va a estar cargado con esta cookie 
+            token = req.cookies["coderCookieToken"];
+        }
+        //si existe lo guardamos, y si lo podemos guardar lo enviamos, lo retornamos
+        return token;
+    }
 
 module.exports = initializePassport;

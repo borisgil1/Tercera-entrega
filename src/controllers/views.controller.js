@@ -61,11 +61,8 @@ class viewsController {
     };
 
     async login(req, res) {
-        if (req.session.login) {
-            return res.redirect("/products")
-        }
         res.render("login");
-    };
+    }
 
     async realTimeProducts(req, res) {
         res.render("realTimeProducts");
@@ -76,12 +73,6 @@ class viewsController {
         res.render("chat");
     }
 
-    async login1(req, res) {
-        if (req.session.login) {
-            return res.redirect("/products")
-        }
-        res.render("login");
-    }
 
     async profile(req, res) {
         if (!req.session.login) {
@@ -91,12 +82,8 @@ class viewsController {
     }
 
     async register(req, res) {
-        if (req.session.login) {
-            res.render("profile");
-        }
         res.render("register");
     }
-
 
     async home (req, res) {
         res.render("home");
@@ -109,7 +96,6 @@ class viewsController {
     async admin (req, res) {
         res.render("admin");
     };
-
 
 }
 
