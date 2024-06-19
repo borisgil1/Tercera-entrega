@@ -33,9 +33,6 @@
           <a class="nav-link" href="/login">Login</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/register">Registrarse</a>
-        </li>
-        <li class="nav-item">
           <a class="nav-link" href="/profile">Mi Perfil</a>
         </li>
         <li class="nav-item">
@@ -45,7 +42,7 @@
           <a class="nav-link" href="/contact">Contáctanos</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/contact">Mi Carrito</a>
+          <a class="nav-link" href="/carts/666fce3d59d6103fa3c85a11">Carrito</a>
         </li>
       </ul>
     </div>
@@ -56,9 +53,9 @@
   <div class="profile-card">
 
     <p>Bienvenido, {{user.Nombre}} {{user.Apellido}}!</p>
-  <p>Rol: {{user.Rol}}</p>
-   <p>Rol: {{user.Carrito}}</p>
-   <p>edad: {{user.Edad}}</p>
+    <p>Rol: {{user.Rol}}</p>
+    <p>Rol: {{user.Carrito}}</p>
+    <p>edad: {{user.Edad}}</p>
 
     <form action="/api/users/logout" method="POST">
       <button class="btn" type="submit">Logout</button>
@@ -71,4 +68,5 @@
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
+
 </html>

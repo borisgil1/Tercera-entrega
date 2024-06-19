@@ -99,8 +99,7 @@
 
     <div class="container">
         <div class="cart-header">
-            <h1>Carrito de Compras</h1>
-            <p>Carrito: {{cartId}}</p>
+             <p>Carrito de compras: {{user.Nombre}} {{user.Apellido}}!</p>
         </div>
 
         {{#each products}}
@@ -108,9 +107,6 @@
             <p><strong>Producto:</strong> {{this.product.title}}</p>
             <p><strong>Precio:</strong> ${{this.product.price}}</p>
             <p><strong>Cantidad:</strong> {{this.quantity}}</p>
-            <p><strong>ID:</strong> {{this._id}}</p>
-             <h5>${{item.product._id}}</h5>
-             <p><strong>ID:</strong> {{product._id}}</p>
         </div>
         {{/each}}
 

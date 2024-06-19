@@ -58,20 +58,6 @@ class CartRepository {
         }
     }
 
-    // async deleteCart(id) {
-    //     try {
-    //         const cadeletedCartrt = await CartsModel.findByIdAndDelete(id);
-    //         if (!deletedCart) {
-    //             console.log("Carrito no encontrado");
-    //             return null;
-    //         }
-    //         console.log("Carrito eliminado correctamente:", deletedCart);
-    //         return deletedCart;
-    //     } catch (error) {
-    //         console.error("Error al eliminar carrito:", error);
-    //     }
-    // }
-
     //Vaciar carrito
     async emptyCart(cartId) {
         try {
@@ -112,34 +98,47 @@ class CartRepository {
     //Agg producto al carrito
     async addProductToCart(cid, pid, quantity) {
         try {
+            // Validamos entradas
+            if (!cid || !pid || !quantity || quantity <= 0) {
+                throw new Error("Parámetros inválidos. Se requiere un CID, PID y cantidad mayor que cero.");
+            }
+    
             const foundCart = await CartsModel.findById(cid);
             const foundProduct = await ProductsModel.findById(pid);
-            
-            if (!foundCart || !foundProduct) {
-                return ({ message: "Producto o carrito no encontrado" });
+    
+            if (!foundCart) {
+                throw new Error("Carrito no encontrado");
             }
             
-            // validamos si el producto está en el carrito
-            const existingProductIndex = foundCart.products.findIndex(product => product.product._id.toString() === pid);
-
+            if (!foundProduct) {
+                throw new Error("Producto no encontrado");
+            }
+    
+            // Validamos si el producto está en el carrito
+            const existingProductIndex = foundCart.products.findIndex(
+                product => product.product._id.toString() === pid
+            );
+    
             if (existingProductIndex !== -1) {
-                foundCart.products[existingProductIndex].quantity += (quantity);
+                foundCart.products[existingProductIndex].quantity += quantity;
             } else {
                 foundCart.products.push({
                     product: foundProduct,
-                    quantity: (quantity),
+                    quantity: quantity,
                 });
             }
-
+    
             await foundCart.save();
-            console.log(foundCart)
-            console.log("Producto agregado al carrito con éxito")
+    
+            console.log(foundCart);
+            console.log("Producto agregado al carrito con éxito");
+    
             return { message: "Producto agregado al carrito con éxito", cart: foundCart };
         } catch (error) {
             console.error("Error al agregar producto al carrito:", error);
-            throw error;
+            throw new Error("Error al agregar producto al carrito: " + error.message);
         }
-    };
+    }
 }
 
 

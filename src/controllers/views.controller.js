@@ -59,11 +59,14 @@ class viewsController {
                     productId: item.product._id, 
                 }));
 
+
+                
+                const userDto = new UserDTO(req.user.first_name, req.user.last_name, req.user.email);
                 //Guardo en variable el cartId y el correo del usuario
                 const cartId = req.user.cart.toString();
                 const email = req.user.email;
-                
-                res.render("carts", { products: productsInCar, totalPrice, cartId, email,});
+             
+                res.render("carts", { products: productsInCar, totalPrice, email, user: userDto, cartId});
 
             } else {
                 return res.status(404).send("Carrito no encontrado")
