@@ -10,9 +10,9 @@ const productsRouter = require("./routes/products.router.js");
 const cartsRouter = require("./routes/carts.router.js");
 const viewsRouter = require("./routes/views.router.js");
 const userRouter = require("./routes/user.router.js");
-
 //Handlebars
 const exphbs = require("express-handlebars");
+//Socket
 const socket = require("socket.io");
 //Repository
 const ProductRepository = require("./repository/product.repository.js");
@@ -36,9 +36,12 @@ const passport = require("passport");
 const initializePassport = require("./config/passport.config.js");
 //Config Object
 const configObject = require("./config/config.js")
-const { mongo_url, port} = configObject;
+const { mongo_url, port } = configObject;
 //Program
 //const program = require ("program");
+//Nodemailer: Permite reliazar el envio de mensajería desde nuestra app
+const nodemailer = require("nodemailer");
+const productController = require("./controllers/product.controller.js");
 
 
 //Handlebar
@@ -52,13 +55,14 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static("./src/public"));
 app.use(cookieParser());
 app.use(session({
-    secret: "secretCoder", 
-    resave: true, 
-    saveUninitialized: true, 
+    secret: "secretCoder",
+    resave: true,
+    saveUninitialized: true,
     store: MongoStore.create({
-        mongoUrl: "mongodb+srv://coderhouse:coderhouse@cluster0.2zgtivj.mongodb.net/ecommerce?retryWrites=true&w=majority&appName=Cluster0", ttl:100
+        mongoUrl: "mongodb+srv://coderhouse:coderhouse@cluster0.2zgtivj.mongodb.net/ecommerce?retryWrites=true&w=majority&appName=Cluster0", ttl: 100
     })
 }))
+
 
 //Passport
 app.use(passport.initialize());
@@ -78,8 +82,21 @@ const httpServer = app.listen(PUERTO, () => {
     console.log(`Escuchando en el puerto ${PUERTO}`);
 })
 
+
+//SMTP = configuración del servicio SMTP, para enviar mensajes
+const transporter = nodemailer.createTransport({
+    service: "gmail",
+    port: 587,
+    auth: {
+        user: "boris.gilp@gmail.com",
+        pass: "ufhc auvf qduw nfwd"
+    }
+})
+
+
 //instancia Socket del servidor
 const io = socket(httpServer);
+
 
 //Conección cliente
 io.on("connection", async (socket) => {
@@ -88,44 +105,63 @@ io.on("connection", async (socket) => {
     //Enviar mensaje para renderizar productos
     const products = await productRepository.getProducts();
     socket.emit("products", products);
-    //console.log(products)
 
-    //Recibir evento agg producto al carrito
-    socket.on("addProductToCart", async (cid, pid, quantity) => {
-        await cartRepository.addProductToCart(cid, pid, quantity);
-        //Evniamos array actualizado
-        socket.emit("addProductToCart", await cartRepository.addProductToCart(cid, pid, quantity));
-    })
-
-    //Recibir evento agg producto desde cliente con formulario
-    socket.on("addProduct", async (product) => {
-        await productRepository.addProduct(product.title, product.description, product.price, product.img, product.code, product.stock, product.category, product.status);
+    //Recibir evento eliminar producto
+    socket.on("deleteProduct", async (pid) => {
+        await productRepository.deleteProduct(pid);
+        console.log(pid)
+        //Enviamos array actualizado
         socket.emit("products", await productRepository.getProducts());
-        //io.emit("products", await productManager.getProducts());
     })
+
+    //Recibir evento agg producto desde cliente
+    socket.on("addProduct", async (producto) => {
+        await productRepository.addProduct(producto);
+        //Enviamos array actualizado
+        socket.emit("products", await productRepository.getProducts());
+    })
+
+
+    //Recibir evento para el Chat
+    //Recupera los mensaje de mongo
+    socket.on("message", async (data) => {
+        await MessagesModel.create(data);
+        //obtengo mensajes de mongo
+        const messages = await MessagesModel.find();
+        socket.emit("message", messages);
+    })
+
 });
 
 
-//const io = new socket.Server(httpServer)
+////////////////////////////////////////////////////////////////////////////////////////////////
 
-//chat
-io.on("connection", (socket) => {
-    console.log("Nuevo usuario conectado");
 
-    socket.on("message", async data => {
-       await MessagesModel.create(data);
-
-        //obtengo mensajes de mongo
-        const messages = await MessagesModel.find();
-        console.log(messages)
-        io.emit("messagesLogs", messages);
-    })
+app.post("/mail", async (req, res) => {
+    const { email, subject, message } = req.body;
+    try {
+        await transporter.sendMail({
+            from: "Baris Gamer <boris.gilp@gmail.com>",
+            to: email,
+            subject: "subject",
+            //cuerpo del mensaje
+            html: `
+            <p>${message}</p>
+            <img src="cid:gogeta" alt="Imagen">`,
+            //Enviar imagen adjunta y en el cuerpo del mail
+            attachments: [{
+                filename: "gogeta.jpg",
+                path: "./src/public/img/gogeta.jpg",
+                cid: "gogeta"
+            },
+            {
+                filename: "gogeta.jpg",
+                path: "./src/public/img/gogeta.jpg" // Se envía como adjunto
+            }]
+        })
+        res.send("Correo enviado correctamente")
+    } catch (error) {
+        res.status(500).send("Error al enviar el correo")
+        console.log(error)
+    }
 })
-
-//////////////////////////////////////////
-
-// console.log(process.cwd());
-// console.log(process.pid);
-// console.log(process.memoryUsage());
-// console.log(process.version); 
-

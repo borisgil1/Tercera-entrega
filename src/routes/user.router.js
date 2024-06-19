@@ -2,32 +2,37 @@ const express = require("express");
 const router = express.Router();
 const passport = require("passport");
 const UserController = require("../controllers/user.controller.js");
-const userController = new UserController
+const userController = new UserController();
+//const UserDTO = require("../dto/user.dto.js");
 
 
-//Register
-router.post("/register", userController.register)
+//Login con Passport
+// router.post("/login", passport.authenticate("login", {failureRedirect: "/login", session: false}), userController.login);
 
-//Login 
-router.post("/login", userController.loginJwt)
+//Logout con poassport
+// router.post("/logout", userController.logout);
 
-//Login Github
+// //Registro con Passport
+// router.post("/register", passport.authenticate("register"), userController.register);
+
+//Login con JWT
+router.post("/login", userController.loginJwt);
+
+//Logout con JWT
+router.post("/logout", userController.logoutJwt);
+
+//Registro con JWT
+router.post("/register", userController.registerJwt);
+
+//Login con Github
 router.get("/github", passport.authenticate("github", { scope: ["user:email"] }));
-  
-//Callback Github
-router.get("/githubcallback", passport.authenticate("github", { failureRedirect: "/login" }), userController.githubCallback);
 
-//Cerrar sesion
-router.post("/logout", userController.logout)
+//router.post("/login", userController.profile);
 
-//Admin
-router.get("/admin", passport.authenticate("jwt", { session: false }), userController.admin);
-
-//Perfil
 router.get("/profile", passport.authenticate("jwt", { session: false }), userController.profile);
 
-
-//Home
-router.get("/home", passport.authenticate("jwt"));
+router.post("/products", userController.products);
+// Callback de Github
+router.get("/githubcallback", passport.authenticate("github", { failureRedirect: "/login" }), userController.githubCallback);
 
 module.exports = router;

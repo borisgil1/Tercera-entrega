@@ -16,11 +16,11 @@ const cartSchema = new mongoose.Schema({
                 required: true
             }
         }
-    ]
-})
+    ],
+});
 
 cartSchema.pre('findOne', function (next) {
-    this.populate('products.product');
+    this.populate('products.product', '_id title price');
     next();
   });
 

@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 //Schema
-const productSchema = new mongoose.Schema({
+const messageSchema = new mongoose.Schema({
     user: {
         type: String,
         required: true
@@ -12,6 +12,6 @@ const productSchema = new mongoose.Schema({
     }
 })
 
-const MessagesModel = mongoose.model("messages", productSchema)
+const MessageModel = mongoose.model("messages", messageSchema);
 
-module.exports = MessagesModel;
+module.exports = MessageModel; 

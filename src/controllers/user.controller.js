@@ -3,12 +3,15 @@ const UserModel = require("../models/user.model.js");
 const jwt = require("jsonwebtoken");
 const { createHash } = require("../utils/hashbcrypt.js");
 const { isValidPassword } = require("../utils/hashbcrypt.js");
-
+//const UserDTO = require("../dto/user.dto.js");
+const CartsModel = require("../models/carts.model.js");
+const Cartcontroller = require("../controllers/cart.controller.js");
+const cartController = new Cartcontroller();
 
 class UserController {
 
     //Registro con JWT
-    async register(req, res) {
+    async registerJwt(req, res) {
 
         let { first_name, last_name, email, password, age } = req.body;
 
@@ -20,14 +23,19 @@ class UserController {
             if (existingUser) {
                 return res.status(400).send("El usuario ya existe")
             }
-            //si no existe lo creo
 
+             //Creamos carrito asosiado al usuario y lo guardo
+            const cart = new CartsModel()
+            await cart.save();
+
+            //si no existe lo creo
             const newUser = new UserModel({
                 first_name,
                 last_name,
                 age,
                 email,
                 password: createHash(password),
+                cart: cart._id,
             })
 
             //Lo guardo en la bdd
@@ -39,7 +47,7 @@ class UserController {
                 last_name: newUser.last_name,
                 email: newUser.email,
                 age: newUser.age,
-                role: newUser.role
+                role: newUser.role,
             }, "coderhouse", { expiresIn: "24h" });
 
             //Enviar token desde una cookie
@@ -47,7 +55,7 @@ class UserController {
             res.cookie("coderCookieToken", token, { maxAge: 60 * 60 * 1000, httpOnly: true });
 
             //una vez me registro me lleva al perfil
-            res.redirect("/api/users/profile")
+            res.redirect("/profile");
 
         } catch (error) {
             res.status(500).send("Error interno del servidor")
@@ -55,72 +63,9 @@ class UserController {
         }
     }
 
-
-    // router.get("/failedregister", (req, res) => {
-    //     res.send("Registro fallido");
-    // })
-
-    // //Version passport, usamos el middleware de passport
-    // router.post("/login", passport.authenticate("login", {
-    //     failureRedirect: "/api/sessions/faillogin"
-    // }), async (req, res) => {
-    //     if (!req.user) {
-    //         return res.status(400).send("Credenciales invalidas");
-    //     } else {
-
-    //         //generamos la sesion
-    //         req.session.user = {
-    //             first_name: req.first_name,
-    //             last_name: req.last_name,
-    //             age: req.age,
-    //             email: req.email,
-    //         }
-    //     }
-
-    //     //indicar que el usuario inició sesión correctamente
-    //     req.session.login = true;
-
-    //     res.redirect("/products")
-    // })
-
-
-    // router.get("/faillogin", async (req, res) => {
-    //     res.send("Login fallido");
-    // })
-
-
-    //Version Github 
-    async gitHub(req, res) {
-        router.get("/githubcallback", passport.authenticate("github", {
-            failureRedirect: "/login"
-        }), async (req, res) => {
-            //La estrategia de Github nos retornará el usuario, entonces los agrego a mi objeto de Session: 
-            req.session.user = req.user;
-            //habilita la ruta
-            req.session.login = true;
-            //Redirijo al perfil
-            res.redirect("/profile");
-        })
-    }
-
-    async githubCallback (req, res) {
-        try {
-            // La estrategia de Github nos retornará el usuario, entonces los agrego a mi objeto de Session: 
-            req.session.user = req.user;
-            // Habilita la ruta
-            req.session.login = true;
-            // Redirijo al perfil
-            res.redirect("/profile");
-        } catch (error) {
-            console.error('Error en el callback de GitHub:', error);
-            res.status(500).send('Error interno del servidor');
-        }
-    };
-
     //Login con JWT 
     async loginJwt(req, res) {
         let { email, password } = req.body;
-
         try {
 
             //verificacion si exite usuario con ese mail
@@ -144,16 +89,18 @@ class UserController {
                     last_name: user.last_name,
                     email: user.email,
                     age: user.age,
-                    rol: user.role
+                    role: user.role,
+                    cart: user.cart
                 },
                 "coderhouse",
                 { expiresIn: "24h" }
 
             );
 
-            //Establecer token como cookie
+            //Establecer token como cookie 
+            //                Clave        valor       tiempo, 1hr       la cookie  solo se accede desde http  
             res.cookie("coderCookieToken", token, { maxAge: 60 * 60 * 1000, httpOnly: true });
-            res.redirect("/api/users/profile")
+            res.redirect("/profile");
 
         } catch (error) {
             res.status(500).send("Error interno del servidor")
@@ -161,27 +108,63 @@ class UserController {
         }
     }
 
-
     //Cerrar sesion con JWT:
-    async logout(req, res) {
+    async logoutJwt(req, res) {
         //limpio la cookie del token
         res.clearCookie("coderCookieToken");
         //Redirigir al login.
         res.redirect("/login");
     }
 
-    //Ruta admin
-    async admin(req, res) {
-        if (req.user.user.role !== "admin") {
-            return res.status(403).send("Acceso denegado");
-        }
-        res.render("admin");
+
+    //Version Github 
+    async gitHub(req, res) {
+        router.get("/githubcallback", passport.authenticate("github", {
+            failureRedirect: "/login"
+        }), async (req, res) => {
+            //La estrategia de Github nos retornará el usuario, entonces los agrego a mi objeto de Session: 
+            req.session.user = req.user;
+            //habilita la ruta
+            req.session.login = true;
+            //Redirijo al perfil
+            res.redirect("/profile");
+        })
     }
+
+    async githubCallback(req, res) {
+        try {
+            // La estrategia de Github nos retornará el usuario, entonces los agrego a mi objeto de Session: 
+            req.session.user = req.user;
+            // Habilita la ruta
+            req.session.login = true;
+            // Redirijo al perfil
+            res.redirect("/profile");
+        } catch (error) {
+            console.error('Error en el callback de GitHub:', error);
+            res.status(500).send('Error interno del servidor');
+        }
+    };
 
 
     async profile(req, res) {
+        if (!req.session.login) {
+            return res.redirect("/login")
+        }
         res.render("profile");
     }
+
+    async products(req, res) {
+                    res.render("products");
+    }
+    //Ruta admin
+    // async admin(req, res) {
+    //     // Asegúrate de que req.user contiene la información del usuario autenticado
+    //     if (!req.user || req.user.role !== "admin") {
+    //         return res.status(403).send("Acceso denegado");
+    //     }
+    //     res.render("admin");
+    // }
+
 
     //Ruta current 
 

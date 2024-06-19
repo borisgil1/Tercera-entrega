@@ -9,6 +9,7 @@ h2 {
     font-size: 25px;
 }
 
+
 .card-height {
     height: 200px;
 }
@@ -69,3 +70,40 @@ body {
 .btnAddtoCart:hover {
     background-color: #4a148c; /* Cambia el color de fondo al pasar el ratón sobre el botón */
 }
+
+.profile-card {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f2f2f2;
+    border-radius: 5px;
+    text-align: center;
+  }
+
+  .profile-card p {
+    margin-bottom: 10px;
+  }
+
+  .profile-card .btn {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    background-color: #6a1b9a; /* Color púrpura */
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+
+  .profile-card .btn:hover {
+    background-color: #9932CC; /* Cambio de color al hacer hover */
+  }
+
+  .profile-card a {
+    display: block;
+    margin-bottom: 10px;
+    color: #6a1b9a; 
+    text-decoration: none;
+    font-weight: bold;
+  }

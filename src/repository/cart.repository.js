@@ -35,7 +35,6 @@ class CartRepository {
                 console.log(`Carrito con ID "${id}" no encontrado`);
                 return null;
             } else {
-                console.log("Carrito encontrado:", cart);
                 return cart;
             }
         } catch (error) {

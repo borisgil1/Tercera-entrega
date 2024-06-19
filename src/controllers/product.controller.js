@@ -21,7 +21,7 @@ class productController {
         try {
             const product = await productService.getProductById(id);
             if (product) {
-                return res.send(product);
+                return res.status(201).send({ message: "Producto encontrado exitosamente", product });
             } else {
                 return res.send("Producto no encontrado");
             }
@@ -34,7 +34,7 @@ class productController {
     async addProduct(req, res) {
         const newProduct = req.body;
         try {
-            const existingProduct = await productService.addProduct({ code: newProduct.code });
+            const product = await productService.addProduct(newProduct);
             if (existingProduct) {
                 // Si existe un producto con el mismo código, devuelve un mensaje de error
                 return res.status(400).json({ message: "El código debe ser único" });
@@ -48,6 +48,17 @@ class productController {
             });
         }
     };
+
+    async addProduct(req, res) {
+        const newProduct = req.body;
+        try {
+            const product = await productService.addProduct(newProduct);
+            res.json({message: "El producto ha sido agregado", product: product}); 
+        } catch (error) {
+            res.status(400).json({ error: error.message }); 
+        }
+    }
+
 
     //Actualizar productos
     async updateProduct(req, res) {

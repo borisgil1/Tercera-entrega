@@ -1,27 +1,24 @@
-//Dotenv permite setear archivos .env, datos que queremos proteger
+// Dotenv permite cargar variables de entorno desde archivos .env
 const dotenv = require("dotenv");
-//programs tiene todas las configuraciones para los argumentos quehice en el commander
+// program tiene todas las configuraciones para los argumentos que se configuraron en commander
 const program = require("../utils/commander.js");
 
-
-//configuracion mode
+// Obtener la configuración de modo
 const { mode } = program.opts();
 
-//configurar dotenv
+// Configurar dotenv
 dotenv.config({
-    //En donde va a encontrar el archivo .env que corresponde segun el modo que pasamos por argumento
-    //De acuerdo a como tengamos el modo tomo produccion o desarrollo
+    // Especifica la ruta del archivo .env según el modo proporcionado como argumento
+    // Si el modo es 'produccion', carga .env.produccion; de lo contrario, carga .env.desarrollo
     path: mode === "produccion" ? "./.env.produccion" : "./.env.desarrollo"
 });
 
-//Config object y mandamos los datos
+// Crear el objeto de configuración y enviar los datos
 const configObject = {
-    //Mandamos el puerto que viene de process.env.PUERTO
+    // Enviar el puerto que viene de process.env.PUERTO
     port: process.env.PUERTO,
-    //Mandamos el mongo url que viene de process.env.Mongo_URÑ
+    // Enviar la URL de MongoDB que viene de process.env.MONGO_URL
     mongo_url: process.env.MONGO_URL
 }
 
 module.exports = configObject;
-
-

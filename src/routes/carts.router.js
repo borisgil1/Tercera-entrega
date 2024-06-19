@@ -21,12 +21,18 @@ router.post("/:cid/products/:pid", cartController.addProductToCart);
 router.delete("/:cid/products/:pid", cartController.deleteCartProduct);
 
 //Actualizar productos del carrito
-router.put("/:id", cartController.updateCartProducts )
+router.put("/:id", cartController.updateCartProducts);
 
 //Actualizar cantidad de productos del carrito
-router.put("/:cid/products/:pid", cartController.updateQuantity)
+router.put("/:cid/products/:pid", cartController.updateQuantity);
 
 //Vaciar carrito
-router.delete("/:cid", cartController.emptyCart );
+router.delete("/:cid", cartController.emptyCart);
+
+//Finalizar compra  
+router.post("/:cid/purchase", cartController.purchase);
+
+//Compra del carrito
+//router.post("/:cid/purchase", cartController.purchaseCart);
 
 module.exports = router;

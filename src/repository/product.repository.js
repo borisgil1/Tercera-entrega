@@ -1,23 +1,25 @@
+//Repository: Se conecta con la bdd, con la persistencia de la información
 
 const ProductsModel = require("../models/products.model");
 
 class ProductRepository {
     
     async addProduct({title, description, price, img, code, stock, category, thumbnails}) {
+        
         try {
+        
             if(!title|| !description || !price || !code || !stock || !category) {
                 console.log("Todos los campos son obligatorios");
                 return; 
             }
 
-            const existeProducto = await ProductsModel.findOne({code: code});
+            const existingProduct = await ProductsModel.findOne({code: code});
 
-            if(existeProducto) {
-                console.log("El código debe ser unico");
-                return;
+            if(existingProduct) {
+                throw new Error("El código debe ser único"); 
             }
 
-            const nuevoProducto = new ProductsModel({
+            const newProduct = new ProductsModel({
                 title, 
                 description, 
                 price, 
@@ -29,7 +31,8 @@ class ProductRepository {
                 thumbnails: thumbnails || []
             });
 
-            await nuevoProducto.save(); 
+            await newProduct.save(); 
+            return newProduct;
 
         } catch (error) {
             console.log("Error al agregar un producto", error); 
@@ -56,7 +59,7 @@ class ProductRepository {
                 console.log(`Producto con ID "${id}" no encontrado`);
                 return null;
             } else {
-                console.log("Producto encontrado:", product);
+                //console.log("Producto encontrado:", product);
                 return product;
             }
         } catch (error) {
@@ -72,7 +75,7 @@ class ProductRepository {
                 console.log("Producto no encontrado");
                 return null;
             }
-            console.log("Producto actualizado correctamente:", updatedProduct);
+            //console.log("Producto actualizado correctamente:", updatedProduct);
             return updatedProduct;
         } catch (error) {
             console.error("Error al actualizar producto:", error);
